@@ -9,8 +9,10 @@ const GRAVITY = 980
 
 var is_jumping = false
 
-enum JumpState { NONE, TAKEOFF, RISING, FALLING, LANDING }
+enum JumpState { NONE, TAKEOFF, RISING, APEX, FALLING, LANDING }
 var jump_state = JumpState.NONE
+
+const JUMP_APEX_THRESHOLD = 50 # The velocity threshold wherein a jump is considered at its 'apex'
 
 const TAKEOFF_FRAMES = 4
 const LANDING_FRAMES = 5
@@ -43,7 +45,11 @@ func update_animation() -> void:
                 jump_state = JumpState.RISING
                 $PlayerSprite.play("jump_rising")
         JumpState.RISING:
-            if velocity.y >= 0:
+            if velocity.y >= -JUMP_APEX_THRESHOLD:
+                jump_state = JumpState.APEX
+                $PlayerSprite.play("jump_apex")
+        JumpState.APEX:
+            if velocity.y > JUMP_APEX_THRESHOLD:
                 jump_state = JumpState.FALLING
                 $PlayerSprite.play("jump_falling")
         JumpState.FALLING:

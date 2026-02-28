@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://c1ytbl50qg2aq"]
+
+[ext_resource type="Texture2D" uid="uid://c7vfau2ng4yqj" path="res://Assets/sprites/player/pixil-frame-0.png" id="1_axl5g"]
+[ext_resource type="Script" path="res://player.gd" id="1_dgfqp"]
+[ext_resource type="Script" path="res://player_sprite.gd" id="1_orkyl"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fpkak"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_axl5g")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Player" type="Node2D"]
+script = ExtResource("1_dgfqp")
+
+[node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(6, 6)
+sprite_frames = SubResource("SpriteFrames_fpkak")
+script = ExtResource("1_orkyl")

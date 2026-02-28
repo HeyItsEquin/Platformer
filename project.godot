@@ -26,6 +26,7 @@ window/stretch/mode="viewport"
 [global_group]
 
 Ground="Objects considered as the ground"
+Player="Group for the player character"
 
 [input]
 

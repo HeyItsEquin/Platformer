@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://cekgn4fdqk3vj" path="res://Assets/sprites/player/SlimeMove.png" id="8_urp6f"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hqtel"]
-size = Vector2(64, 61)
+size = Vector2(64, 63.5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bwjto"]
 atlas = ExtResource("2_dw050")
@@ -187,7 +187,7 @@ animations = [{
 script = ExtResource("1_dgfqp")
 
 [node name="CollisionShape" type="CollisionShape2D" parent="." unique_id=1848220456]
-position = Vector2(0, 1)
+position = Vector2(0, -0.25)
 shape = SubResource("RectangleShape2D_hqtel")
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="." unique_id=1229430777]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7vfau2ng4yqj"
-path="res://.godot/imported/pixil-frame-0.png-b485eee9c344e8f1154a8e4e84269d99.ctex"
+uid="uid://b1ojti6h0l2tl"
+path="res://.godot/imported/SlimeApex.png-ed3ae5404fe7da9ee3a0eb7b59b407ff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/sprites/player/pixil-frame-0.png"
-dest_files=["res://.godot/imported/pixil-frame-0.png-b485eee9c344e8f1154a8e4e84269d99.ctex"]
+source_file="res://Assets/sprites/player/SlimeApex.png"
+dest_files=["res://.godot/imported/SlimeApex.png-ed3ae5404fe7da9ee3a0eb7b59b407ff.ctex"]
 
 [params]
 

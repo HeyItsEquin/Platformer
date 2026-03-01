@@ -50,7 +50,7 @@ sources/1 = SubResource("TileSetAtlasSource_xkndl")
 [node name="Game" type="Node2D" unique_id=44623282]
 
 [node name="Player" parent="." unique_id=1820902120 groups=["Player"] instance=ExtResource("1_km16d")]
-position = Vector2(480, 600)
+position = Vector2(496, 640)
 move_speed_transition_speed = 8.0
 
 [node name="Ground" type="StaticBody2D" parent="." unique_id=659786825 groups=["Ground"]]

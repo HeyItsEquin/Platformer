@@ -14,6 +14,7 @@ level = NodePath("../Level1")
 
 [node name="Camera" parent="." unique_id=1163935152 node_paths=PackedStringArray("follow_target") instance=ExtResource("3_t88pq")]
 follow_target = NodePath("../Player")
+height_offset = 64.0
 
 [node name="Brain" parent="Camera" index="0" unique_id=270523450]
 visible = true

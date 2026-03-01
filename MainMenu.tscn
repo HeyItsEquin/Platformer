@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://dwsvrdr6egww5"]
+
+[ext_resource type="Script" uid="uid://j4v6tyagsd1s" path="res://main_menu.gd" id="1_i26rj"]
+
+[sub_resource type="Theme" id="Theme_kjwba"]
+default_font_size = 48
+
+[node name="MainMenu" type="Control" unique_id=789434898]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i26rj")
+
+[node name="Button" type="Button" parent="." unique_id=33670807]
+layout_mode = 0
+offset_left = 424.0
+offset_top = 272.0
+offset_right = 736.0
+offset_bottom = 368.0
+theme = SubResource("Theme_kjwba")
+text = "Start"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -28,6 +28,7 @@ window/stretch/mode="viewport"
 Ground="Objects considered as the ground"
 Player="Group for the player character"
 Camera=""
+Terrain=""
 
 [input]
 

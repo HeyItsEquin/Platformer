@@ -1,11 +1,11 @@
-[gd_scene format=4 uid="uid://ccmeoeru88kip"]
+[gd_scene format=4 uid="uid://bekxhti7o4j4j"]
 
-[ext_resource type="Texture2D" uid="uid://cr1nyr5kn5m5o" path="res://Assets/sprites/background/level1/Brain Sprite Sheet.png" id="1_kyxg0"]
-[ext_resource type="Script" uid="uid://71hidu5rlk5d" path="res://Scenes/Level1/level_1.gd" id="1_mc20k"]
-[ext_resource type="Texture2D" uid="uid://svl4ekxbpnvb" path="res://Assets/sprites/LightingGates.png" id="2_vxb1s"]
+[ext_resource type="Script" uid="uid://71hidu5rlk5d" path="res://Scenes/Level1/level_1.gd" id="1_hcbbb"]
+[ext_resource type="Texture2D" uid="uid://svl4ekxbpnvb" path="res://Assets/sprites/LightingGates.png" id="2_q3h6c"]
+[ext_resource type="Texture2D" uid="uid://cr1nyr5kn5m5o" path="res://Assets/sprites/background/level1/Brain Sprite Sheet.png" id="3_537x7"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_teab5"]
-texture = ExtResource("2_vxb1s")
+texture = ExtResource("2_q3h6c")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 1:0/0 = 0
@@ -13,7 +13,7 @@ texture_region_size = Vector2i(32, 32)
 1:1/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yq8de"]
-texture = ExtResource("1_kyxg0")
+texture = ExtResource("3_537x7")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
@@ -63,7 +63,7 @@ sources/1 = SubResource("TileSetAtlasSource_yq8de")
 sources/0 = SubResource("TileSetAtlasSource_teab5")
 
 [node name="Level1" type="Node2D" unique_id=709307873]
-script = ExtResource("1_mc20k")
+script = ExtResource("1_hcbbb")
 
 [node name="ForegroundTiles" type="TileMapLayer" parent="." unique_id=259277065 groups=["Terrain"]]
 use_parent_material = true

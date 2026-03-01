@@ -29,6 +29,7 @@ func load_level_scenes(scene: PackedScene, bg: String) -> void:
 	match bg:
 		"BRAIN":
 			camera.current_background = camera.Background.BRAIN
+	player.level = level
 
 	add_child(player)
 	add_child(camera)

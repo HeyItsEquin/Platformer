@@ -34,8 +34,6 @@ var is_jumping = false
 var use_burrowed_speed = false
 var animation_locked = false
 
-# These two variables just to keep code working after major changes to burrow system :P
-# (no I'm not gonna fix the functions these break, are you crazy?)
 var is_burrowed: bool:
 	get: return burrow_state == BurrowState.BURROWED
 var is_burrowing: bool:
@@ -53,8 +51,8 @@ func _ready() -> void:
 	latest_checkpoint = level.get_node("PlayerSpawn").position
 
 func _process(delta: float) -> void:
-	update_animation()
 	update_burrow()
+	update_animation()
 	update_collider()
 
 func _physics_process(delta: float) -> void:
@@ -182,7 +180,7 @@ func process_input(delta: float) -> void:
 	if Input.is_action_just_pressed("move_up"):
 		if is_burrowed:
 			exit_burrow(true)
-		else:
+		elif burrow_state != BurrowState.EXITING:
 			jump()
 
 	if Input.is_action_just_released("move_up"):
@@ -217,22 +215,23 @@ func exit_burrow(jumped: bool) -> void:
 	if burrow_state == BurrowState.ENTERING:
 		set_burrow_state(BurrowState.NONE)
 		return
-	
-	if not can_exit_burrow():
-		return
-	
+
 	if jumped:
+		if burrow_state != BurrowState.BURROWED or not should_burrow:
+			return
+		if not can_exit_burrow():
+			return
 		set_burrow_state(BurrowState.NONE)
 		should_jump = true
 		jump(true)
 	else:
+		if not can_exit_burrow():
+			return
 		set_burrow_state(BurrowState.EXITING)
 
 func can_exit_burrow() -> bool:
-	var collides = would_collide_with_size(collision_height)
-	return burrow_state == BurrowState.BURROWED and should_burrow and not collides
+	return burrow_state == BurrowState.BURROWED and should_burrow and not would_collide_with_size(collision_height)
 
-# Don't ask me how this works, I don't want to think about it
 func would_collide_with_size(new_height: float) -> bool:
 	var space = get_world_2d().direct_space_state
 	var query = PhysicsShapeQueryParameters2D.new()
@@ -270,7 +269,6 @@ func get_move_speed(delta: float) -> float:
 	current_move_speed = lerpf(current_move_speed, target, move_speed_transition_speed * delta)
 	return current_move_speed
 
-# For the love of god don't fucking change this PLEASE
 func update_collider() -> void:
 	var target_height = get_target_collider_height()
 	var offset = (collision_height - target_height) / 2.0

@@ -5,7 +5,7 @@ extends CharacterBody2D
 @export var jump_force = 500 
 @export var jump_cut_multiplier = 0.5 #Multiplier for gravity when a jump is cut off
 @export var fall_gravity_multiplier = 1.8 # Gravitational multiplier when falling from a jump
-@export var collision_height = 32.0 # Hitbox height
+@export var collision_height = 24.0 # Hitbox height
 @export var collision_height_burrowed = 8.0 # Hitbox height while burrowed
 
 const GRAVITY = 980
@@ -96,8 +96,7 @@ func process_input() -> void:
 
 	if Input.is_action_pressed("burrow"):
 		enter_burrow()
-
-	if Input.is_action_just_released("burrow"):
+	else:
 		exit_burrow()
 
 func jump() -> void:
@@ -122,7 +121,7 @@ func enter_burrow() -> void:
 	is_burrowed = true
 	
 func exit_burrow() -> void:
-	if not is_burrowed:
+	if not can_exit_burrow():
 		return
 
 	is_burrowing = true
@@ -131,6 +130,9 @@ func exit_burrow() -> void:
 	await get_tree().create_timer($PlayerSprite.sprite_frames.get_animation_speed("enter_burrow") * ENTER_BURROW_FRAMES / 60.0).timeout
 	is_burrowing = false
 	
+func can_exit_burrow() -> bool:
+	return is_burrowed
+
 func move(dir: MoveDir) -> void:
 	if dir == MoveDir.RIGHT and should_move:
 		velocity.x = get_move_speed()

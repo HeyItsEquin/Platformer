@@ -8,8 +8,9 @@
 [node name="Game" type="Node2D" unique_id=44623282]
 script = ExtResource("1_sb48q")
 
-[node name="Player" parent="." unique_id=696115482 instance=ExtResource("2_sb48q")]
+[node name="Player" parent="." unique_id=696115482 node_paths=PackedStringArray("level") instance=ExtResource("2_sb48q")]
 position = Vector2(432, 640)
+level = NodePath("../Level1")
 
 [node name="Camera" parent="." unique_id=1163935152 node_paths=PackedStringArray("follow_target") instance=ExtResource("3_t88pq")]
 follow_target = NodePath("../Player")

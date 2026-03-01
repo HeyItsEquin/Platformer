@@ -11,6 +11,8 @@ extends CharacterBody2D
 @export var collision_height = 24.0 # Hitbox height
 @export var collision_height_burrowed = 8.0 # Hitbox height whilst burrowed
 
+@export var level: Node2D
+
 const COLLISION_OFFSET_Y = 4
 
 const GRAVITY = 980
@@ -26,6 +28,7 @@ var jump_state = JumpState.NONE # Current stage of the jump, 'NONE' means not ju
 
 var should_move = true # Can the player currently move
 var should_jump = true # Can the player currently jump
+var should_burrow = true # Can the player currently burrow/exit burrow
 
 const JUMP_APEX_THRESHOLD = 50 # The velocity threshold wherein a jump is considered at its 'apex'
 
@@ -38,6 +41,11 @@ var state_timer = 0
 
 var current_move_speed = move_speed
 @export var move_speed_transition_speed = 4.0
+
+var latest_checkpoint: Vector2
+
+func _ready() -> void:
+	assert(level)
 
 func _process(delta: float) -> void:
 	update_animation()
@@ -132,6 +140,9 @@ func process_input(delta: float) -> void:
 	else:
 		exit_burrow(false)
 
+	if Input.is_action_just_released("debug"):
+		debug()
+
 func jump(burrowed: bool = false) -> void:
 	if is_on_floor() and should_jump:
 		velocity.y = -jump_force
@@ -162,6 +173,9 @@ func enter_burrow() -> void:
 	is_burrowed = true
 	
 func can_burrow() -> bool:
+	if not should_burrow:
+		return false
+
 	if is_burrowed or is_burrowing:
 		return false
 
@@ -190,7 +204,7 @@ func exit_burrow(jumped: bool) -> void:
 		is_burrowing = false
 	
 func can_exit_burrow() -> bool:
-	return (is_burrowed and not is_burrowing) and not would_collide_with_size(collision_height)
+	return (is_burrowed and not is_burrowing and should_burrow) and not would_collide_with_size(collision_height)
 
 # Don't ask me how this works, I don't want to think about it
 func would_collide_with_size(new_height: float) -> bool:
@@ -243,6 +257,27 @@ func get_target_collider_height() -> float:
 		target = collision_height_jumping
 
 	return target
+
+func die() -> void:
+	should_move = false
+	should_jump = false
+	should_burrow = false
+
+	await get_tree().create_timer(1.5).timeout
+
+	respawn(get_latest_checkpoint())
+
+func respawn(location: Vector2 = position) -> void:
+	position = location
+	should_move = true
+	should_jump = true
+	should_burrow = true
+
+func get_latest_checkpoint() -> Vector2:
+	return level.get_node("PlayerSpawn").position
+
+func debug() -> void:
+	die()
 
 func _on_player_sprite_animation_finished() -> void:
 	pass

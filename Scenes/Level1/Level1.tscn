@@ -146,8 +146,8 @@ size = Vector2(96, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iil5s"]
 size = Vector2(224, 66)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hbmps"]
-size = Vector2(128.00018, 20)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hrs7e"]
+size = Vector2(129.00006, 20)
 
 [node name="Level1" type="Node2D" unique_id=709307873]
 script = ExtResource("1_hcbbb")
@@ -199,8 +199,8 @@ rotation = -1.5701541
 toggle_delay = 2.5
 
 [node name="CollisionShape" parent="LightningGate3" index="0" unique_id=316245950]
-position = Vector2(-8.000183, -6.1035156e-05)
-shape = SubResource("RectangleShape2D_hbmps")
+position = Vector2(-7.496887, -0.00024414063)
+shape = SubResource("RectangleShape2D_hrs7e")
 
 [node name="ObstacleSprite" parent="LightningGate3" index="1" unique_id=1108451378]
 position = Vector2(-7.939249, 0)

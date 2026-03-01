@@ -16,6 +16,8 @@ extends CharacterBody2D
 
 @export var level: Node2D
 @export var tilemap: TileMapLayer
+@export var background_music: AudioStreamPlayer2D
+@export var jump_sound: AudioStreamPlayer2D
 
 const COLLISION_OFFSET_Y = 4
 const GRAVITY = 980
@@ -55,8 +57,12 @@ var latest_checkpoint: Vector2
 
 func _ready() -> void:
 	assert(level)
+	assert(background_music)
+	assert(jump_sound)
 	latest_checkpoint = level.get_node("PlayerSpawn").position
 	tilemap = level.get_node("ForegroundTiles")
+
+	background_music.play()
 
 func _process(delta: float) -> void:
 	update_burrow()
@@ -292,6 +298,7 @@ func process_wall_movement(delta: float) -> void:
 		is_jumping = true
 		jump_state = JumpState.TAKEOFF
 		state_timer = TAKEOFF_FRAMES
+		jump_sound.play()
 		return
 
 	if Input.is_action_pressed("move_up"):
@@ -326,6 +333,7 @@ func jump(burrowed: bool = false, from_wall: bool = false) -> void:
 		jump_state = JumpState.TAKEOFF
 		state_timer = TAKEOFF_FRAMES_BURROWED if burrowed else TAKEOFF_FRAMES
 		$PlayerSprite.play("jump_takeoff", 0.6)
+		jump_sound.play()
 
 func jump_cut() -> void:
 	if is_jumping and velocity.y < 0:

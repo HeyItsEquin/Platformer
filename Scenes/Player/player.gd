@@ -29,6 +29,7 @@ var jump_state = JumpState.NONE # Current stage of the jump, 'NONE' means not ju
 var should_move = true # Can the player currently move
 var should_jump = true # Can the player currently jump
 var should_burrow = true # Can the player currently burrow/exit burrow
+var animation_locked = false
 
 const JUMP_APEX_THRESHOLD = 50 # The velocity threshold wherein a jump is considered at its 'apex'
 
@@ -68,6 +69,9 @@ func apply_gravity(delta: float) -> void:
 	velocity.y += gravity_this_frame * delta
 
 func update_animation() -> void:
+	if animation_locked:
+		return
+
 	match jump_state:
 		JumpState.TAKEOFF:
 			state_timer -= 1
@@ -226,13 +230,16 @@ func would_collide_with_size(new_height: float) -> bool:
 
 enum MoveDir { RIGHT, LEFT, NONE }
 func move(dir: MoveDir, delta: float) -> void:
-	if dir == MoveDir.RIGHT and should_move:
+	if dir == MoveDir.RIGHT:
 		velocity.x = get_move_speed(delta)
 		$PlayerSprite.flip_h = false
-	if dir == MoveDir.LEFT and should_move:
+	if dir == MoveDir.LEFT:
 		velocity.x = -get_move_speed(delta)
 		$PlayerSprite.flip_h = true
 	if dir == MoveDir.NONE:
+		velocity.x = 0
+
+	if not should_move:
 		velocity.x = 0
 
 func get_move_speed(delta: float) -> int:
@@ -263,7 +270,11 @@ func die() -> void:
 	should_jump = false
 	should_burrow = false
 
-	await get_tree().create_timer(1.5).timeout
+	animation_locked = true
+
+	$PlayerSprite.stop()
+	$PlayerSprite.play("death", 2.4)
+	await $PlayerSprite.animation_finished
 
 	respawn(get_latest_checkpoint())
 
@@ -272,6 +283,7 @@ func respawn(location: Vector2 = position) -> void:
 	should_move = true
 	should_jump = true
 	should_burrow = true
+	animation_locked = false
 
 func get_latest_checkpoint() -> Vector2:
 	return level.get_node("PlayerSpawn").position

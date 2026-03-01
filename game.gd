@@ -14,18 +14,21 @@ enum Levels { SHELL, PSYCH, CORE }
 func load_level(lvl: Levels) -> void:
 	match lvl:
 		Levels.SHELL:
-			load_level_scenes(SCENE_SHELL)
+			load_level_scenes(SCENE_SHELL, "BRAIN")
 		Levels.PSYCH:
-			load_level_scenes(SCENE_PSYCH)
+			load_level_scenes(SCENE_PSYCH, "UNK")
 		Levels.CORE:
-			load_level_scenes(SCENE_CORE)
+			load_level_scenes(SCENE_CORE, "UNK")
 
-func load_level_scenes(scene: PackedScene) -> void:
+func load_level_scenes(scene: PackedScene, bg: String) -> void:
 	var level = scene.instantiate()
 	var player = PLAYER_SCENE_OBJ.instantiate()
 	var camera = CAMERA_SCENE_OBJ.instantiate()
 
 	camera.follow_target = player
+	match bg:
+		"BRAIN":
+			camera.current_background = camera.Background.BRAIN
 
 	add_child(player)
 	add_child(camera)

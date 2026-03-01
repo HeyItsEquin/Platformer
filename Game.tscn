@@ -14,4 +14,9 @@ position = Vector2(432, 640)
 [node name="Camera" parent="." unique_id=1163935152 node_paths=PackedStringArray("follow_target") instance=ExtResource("3_t88pq")]
 follow_target = NodePath("../Player")
 
+[node name="Brain" parent="Camera" index="0" unique_id=270523450]
+visible = true
+
 [node name="Level1" parent="." unique_id=709307873 instance=ExtResource("4_r0x5m")]
+
+[editable path="Camera"]

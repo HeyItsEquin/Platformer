@@ -21,6 +21,7 @@ const TAKEOFF_FRAMES = 0
 const TAKEOFF_FRAMES_BURROWED = 4
 const LANDING_FRAMES = 4
 const DROPPING_FRAMES = 4
+const ENTER_BURROW_FRAMES = 7
 
 enum JumpState { NONE, TAKEOFF, RISING, APEX, FALLING, LANDING, DROPPING }
 var jump_state = JumpState.NONE
@@ -41,246 +42,246 @@ var current_move_speed = move_speed
 var latest_checkpoint: Vector2
 
 func _ready() -> void:
-    assert(level)
-    latest_checkpoint = level.get_node("PlayerSpawn").position
+	assert(level)
+	latest_checkpoint = level.get_node("PlayerSpawn").position
 
 func _process(delta: float) -> void:
-    update_animation()
-    update_collider()
+	update_animation()
+	update_collider()
 
 func _physics_process(delta: float) -> void:
-    apply_gravity(delta)
-    process_input(delta)
-    move_and_slide()
-    check_collisions()
+	apply_gravity(delta)
+	process_input(delta)
+	move_and_slide()
+	check_collisions()
 
 func set_player_control(enabled: bool) -> void:
-    should_move = enabled
-    should_jump = enabled
-    should_burrow = enabled
+	should_move = enabled
+	should_jump = enabled
+	should_burrow = enabled
 
 func set_burrowed(burrowed: bool) -> void:
-    is_burrowed = burrowed
-    use_burrowed_speed = burrowed
+	is_burrowed = burrowed
+	use_burrowed_speed = burrowed
 
 func reset_state() -> void:
-    set_player_control(true)
-    set_burrowed(false)
-    animation_locked = false
-    is_burrowing = false
-    jump_state = JumpState.NONE
-    velocity = Vector2.ZERO
+	set_player_control(true)
+	set_burrowed(false)
+	animation_locked = false
+	is_burrowing = false
+	jump_state = JumpState.NONE
+	velocity = Vector2.ZERO
 
 func apply_gravity(delta: float) -> void:
-    if is_on_floor():
-        is_jumping = false
-        return
+	if is_on_floor():
+		is_jumping = false
+		return
 
-    var gravity_this_frame = GRAVITY
-    if velocity.y > 0:
-        gravity_this_frame *= fall_gravity_multiplier
+	var gravity_this_frame = GRAVITY
+	if velocity.y > 0:
+		gravity_this_frame *= fall_gravity_multiplier
 
-    velocity.y += gravity_this_frame * delta
+	velocity.y += gravity_this_frame * delta
 
 func update_animation() -> void:
-    if animation_locked:
-        return
+	if animation_locked:
+		return
 
-    match jump_state:
-        JumpState.TAKEOFF:
-            state_timer -= 1
-            if state_timer <= 0:
-                jump_state = JumpState.RISING
-                $PlayerSprite.play("jump_rising")
-        JumpState.RISING:
-            if velocity.y >= -JUMP_APEX_THRESHOLD:
-                jump_state = JumpState.APEX
-                $PlayerSprite.play("jump_apex")
-        JumpState.APEX:
-            if velocity.y > JUMP_APEX_THRESHOLD:
-                jump_state = JumpState.FALLING
-                $PlayerSprite.play("jump_falling")
-        JumpState.FALLING:
-            if is_on_floor():
-                jump_state = JumpState.LANDING
-                state_timer = LANDING_FRAMES
-                $PlayerSprite.play("jump_landing")
-        JumpState.LANDING:
-            state_timer -= 1
-            if state_timer <= 0:
-                jump_state = JumpState.NONE
-        JumpState.DROPPING:
-            state_timer -= 1
-            if state_timer <= 0:
-                jump_state = JumpState.FALLING
-                $PlayerSprite.play("jump_falling")
-            if is_on_floor():
-                jump_state = JumpState.LANDING
-                state_timer = LANDING_FRAMES
-                $PlayerSprite.play("jump_landing")
-        JumpState.NONE:
-            if velocity.y > 0 and not is_on_floor():
-                jump_state = JumpState.DROPPING
-                state_timer = DROPPING_FRAMES
-                $PlayerSprite.play("dropping")
-            elif velocity.x != 0 and not (is_burrowed or is_burrowing):
-                $PlayerSprite.play("moving")
-            elif is_burrowed and not is_burrowing:
-                $PlayerSprite.play("in_burrow")
-            elif not is_burrowing and not is_burrowed:
-                $PlayerSprite.play("idle")
+	match jump_state:
+		JumpState.TAKEOFF:
+			state_timer -= 1
+			if state_timer <= 0:
+				jump_state = JumpState.RISING
+				$PlayerSprite.play("jump_rising")
+		JumpState.RISING:
+			if velocity.y >= -JUMP_APEX_THRESHOLD:
+				jump_state = JumpState.APEX
+				$PlayerSprite.play("jump_apex")
+		JumpState.APEX:
+			if velocity.y > JUMP_APEX_THRESHOLD:
+				jump_state = JumpState.FALLING
+				$PlayerSprite.play("jump_falling")
+		JumpState.FALLING:
+			if is_on_floor():
+				jump_state = JumpState.LANDING
+				state_timer = LANDING_FRAMES
+				$PlayerSprite.play("jump_landing")
+		JumpState.LANDING:
+			state_timer -= 1
+			if state_timer <= 0:
+				jump_state = JumpState.NONE
+		JumpState.DROPPING:
+			state_timer -= 1
+			if state_timer <= 0:
+				jump_state = JumpState.FALLING
+				$PlayerSprite.play("jump_falling")
+			if is_on_floor():
+				jump_state = JumpState.LANDING
+				state_timer = LANDING_FRAMES
+				$PlayerSprite.play("jump_landing")
+		JumpState.NONE:
+			if velocity.y > 0 and not is_on_floor():
+				jump_state = JumpState.DROPPING
+				state_timer = DROPPING_FRAMES
+				$PlayerSprite.play("dropping")
+			elif velocity.x != 0 and not (is_burrowed or is_burrowing):
+				$PlayerSprite.play("moving")
+			elif is_burrowed and not is_burrowing:
+				$PlayerSprite.play("in_burrow")
+			elif not is_burrowing and not is_burrowed:
+				$PlayerSprite.play("idle")
 
 func process_input(delta: float) -> void:
-    if Input.is_action_pressed("move_right"):
-        move(MoveDir.RIGHT, delta)
-    elif Input.is_action_pressed("move_left"):
-        move(MoveDir.LEFT, delta)
-    else:
-        move(MoveDir.NONE, delta)
+	if Input.is_action_pressed("move_right"):
+		move(MoveDir.RIGHT, delta)
+	elif Input.is_action_pressed("move_left"):
+		move(MoveDir.LEFT, delta)
+	else:
+		move(MoveDir.NONE, delta)
 
-    if Input.is_action_just_pressed("move_up"):
-        if is_burrowed:
-            exit_burrow(true)
-        else:
-            jump()
+	if Input.is_action_just_pressed("move_up"):
+		if is_burrowed:
+			exit_burrow(true)
+		else:
+			jump()
 
-    if Input.is_action_just_released("move_up"):
-        jump_cut()
+	if Input.is_action_just_released("move_up"):
+		jump_cut()
 
-    if Input.is_action_pressed("burrow"):
-        enter_burrow()
-    else:
-        exit_burrow(false)
+	if Input.is_action_pressed("burrow"):
+		enter_burrow()
+	else:
+		exit_burrow(false)
 
 func jump(burrowed: bool = false) -> void:
-    if is_on_floor() and should_jump:
-        velocity.y = -(jump_force_burrowed if burrowed else jump_force_standard)
-        is_jumping = true
-        jump_state = JumpState.TAKEOFF
-        state_timer = TAKEOFF_FRAMES_BURROWED if burrowed else TAKEOFF_FRAMES
-        $PlayerSprite.play("jump_takeoff", 0.6)
+	if is_on_floor() and should_jump:
+		velocity.y = -(jump_force_burrowed if burrowed else jump_force_standard)
+		is_jumping = true
+		jump_state = JumpState.TAKEOFF
+		state_timer = TAKEOFF_FRAMES_BURROWED if burrowed else TAKEOFF_FRAMES
+		$PlayerSprite.play("jump_takeoff", 0.6)
 
 func jump_cut() -> void:
-    if is_jumping and velocity.y < 0:
-        velocity.y *= jump_cut_multiplier
+	if is_jumping and velocity.y < 0:
+		velocity.y *= jump_cut_multiplier
 
 func enter_burrow() -> void:
-    if not can_burrow():
-        return
+	if not can_burrow():
+		return
 
-    burrow_cancelled = false
-    is_burrowing = true
-    should_jump = false
-    use_burrowed_speed = true
-    $PlayerSprite.play("enter_burrow", 1.4)
-    await $PlayerSprite.animation_finished
+	burrow_cancelled = false
+	is_burrowing = true
+	should_jump = false
+	use_burrowed_speed = true
+	$PlayerSprite.play("enter_burrow", 1.4)
+	await get_tree().create_timer($PlayerSprite.sprite_frames.get_animation_speed("enter_burrow") * ENTER_BURROW_FRAMES / 60.0).timeout
 
-    if burrow_cancelled:
-        is_burrowing = false
-        use_burrowed_speed = false
-        should_jump = true
-        return
+	if burrow_cancelled or not is_on_floor():
+		is_burrowing = false
+		use_burrowed_speed = false
+		should_jump = true
+		return
 
-    should_jump = true
-    is_burrowing = false
-    is_burrowed = true
+	should_jump = true
+	is_burrowing = false
+	is_burrowed = true
 
 func can_burrow() -> bool:
-    return should_burrow and not is_burrowed and not is_burrowing and not is_jumping
+	return should_burrow and not is_burrowed and not is_burrowing and not is_jumping and is_on_floor()
 
 func exit_burrow(jumped: bool) -> void:
-    if is_burrowing and not is_burrowed:
-        burrow_cancelled = true
-        return
+	if is_burrowing and not is_burrowed:
+		burrow_cancelled = true
+		return
 
-    if not can_exit_burrow():
-        return
+	if not can_exit_burrow():
+		return
 
-    if jumped:
-        set_burrowed(false)
-        should_jump = true
-        jump(true)
-    else:
-        is_burrowing = true
-        should_jump = false
-        set_burrowed(false)
-        $PlayerSprite.play("exit_burrow", 1.3)
-        await $PlayerSprite.animation_finished
-        should_jump = true
-        is_burrowing = false
+	if jumped:
+		set_burrowed(false)
+		should_jump = true
+		jump(true)
+	else:
+		is_burrowing = true
+		should_jump = false
+		set_burrowed(false)
+		$PlayerSprite.play("exit_burrow", 1.3)
+		await $PlayerSprite.animation_finished
+		should_jump = true
+		is_burrowing = false
 
 func can_exit_burrow() -> bool:
-    return is_burrowed and not is_burrowing and should_burrow and not would_collide_with_size(collision_height)
+	return is_burrowed and not is_burrowing and should_burrow and not would_collide_with_size(collision_height)
 
 # Don't ask me how this works, I don't want to think about it
 func would_collide_with_size(new_height: float) -> bool:
-    var space = get_world_2d().direct_space_state
-    var query = PhysicsShapeQueryParameters2D.new()
+	var space = get_world_2d().direct_space_state
+	var query = PhysicsShapeQueryParameters2D.new()
 
-    var shape = RectangleShape2D.new()
-    shape.size = Vector2(($CollisionShape.shape as RectangleShape2D).size.x, new_height)
+	var shape = RectangleShape2D.new()
+	shape.size = Vector2(($CollisionShape.shape as RectangleShape2D).size.x, new_height)
 
-    var offset = (collision_height - new_height) / 2.0
-    var shape_transform = global_transform
-    shape_transform.origin.y += COLLISION_OFFSET_Y + offset
+	var offset = (collision_height - new_height) / 2.0
+	var shape_transform = global_transform
+	shape_transform.origin.y += COLLISION_OFFSET_Y + offset
 
-    query.shape = shape
-    query.transform = shape_transform
-    query.exclude = [self]
+	query.shape = shape
+	query.transform = shape_transform
+	query.exclude = [self]
 
-    return space.intersect_shape(query).size() > 0
+	return space.intersect_shape(query).size() > 0
 
 enum MoveDir { RIGHT, LEFT, NONE }
 func move(dir: MoveDir, delta: float) -> void:
-    if dir == MoveDir.RIGHT:
-        velocity.x = get_move_speed(delta)
-        $PlayerSprite.flip_h = false
-    elif dir == MoveDir.LEFT:
-        velocity.x = -get_move_speed(delta)
-        $PlayerSprite.flip_h = true
-    else:
-        velocity.x = 0
+	if dir == MoveDir.RIGHT:
+		velocity.x = get_move_speed(delta)
+		$PlayerSprite.flip_h = false
+	elif dir == MoveDir.LEFT:
+		velocity.x = -get_move_speed(delta)
+		$PlayerSprite.flip_h = true
+	else:
+		velocity.x = 0
 
-    if not should_move:
-        velocity.x = 0
+	if not should_move:
+		velocity.x = 0
 
 func get_move_speed(delta: float) -> float:
-    var target = burrow_move_speed if use_burrowed_speed else move_speed
-    current_move_speed = lerpf(current_move_speed, target, move_speed_transition_speed * delta)
-    return current_move_speed
+	var target = burrow_move_speed if use_burrowed_speed else move_speed
+	current_move_speed = lerpf(current_move_speed, target, move_speed_transition_speed * delta)
+	return current_move_speed
 
 # For the love of god don't fucking change this PLEASE
 func update_collider() -> void:
-    var target_height = get_target_collider_height()
-    var offset = (collision_height - target_height) / 2.0
-    ($CollisionShape.shape as RectangleShape2D).size.y = target_height
-    $CollisionShape.position.y = COLLISION_OFFSET_Y + offset
+	var target_height = get_target_collider_height()
+	var offset = (collision_height - target_height) / 2.0
+	($CollisionShape.shape as RectangleShape2D).size.y = target_height
+	$CollisionShape.position.y = COLLISION_OFFSET_Y + offset
 
 func get_target_collider_height() -> float:
-    if is_burrowed and not is_jumping:
-        return collision_height_burrowed
-    if is_jumping and not is_burrowed:
-        return collision_height_jumping
-    return collision_height
+	if is_burrowed and not is_jumping:
+		return collision_height_burrowed
+	if is_jumping and not is_burrowed:
+		return collision_height_jumping
+	return collision_height
 
 func check_collisions() -> void:
-    for i in get_slide_collision_count():
-        var collider = get_slide_collision(i).get_collider()
-        if collider.is_in_group("Checkpoint"):
-            latest_checkpoint = collider.position
+	for i in get_slide_collision_count():
+		var collider = get_slide_collision(i).get_collider()
+		if collider.is_in_group("Checkpoint"):
+			latest_checkpoint = collider.position
 
 func die() -> void:
-    set_player_control(false)
-    animation_locked = true
-    $PlayerSprite.stop()
-    $PlayerSprite.play("death", 2.4)
-    await $PlayerSprite.animation_finished
-    respawn(latest_checkpoint)
+	set_player_control(false)
+	animation_locked = true
+	$PlayerSprite.stop()
+	$PlayerSprite.play("death", 2.4)
+	await $PlayerSprite.animation_finished
+	respawn(latest_checkpoint)
 
 func respawn(location: Vector2 = position) -> void:
-    reset_state()
-    position = location
-    $PlayerSprite.play("idle")
+	reset_state()
+	position = location
+	$PlayerSprite.play("idle")
 
 func _on_player_sprite_animation_finished() -> void:
-    pass
+	pass

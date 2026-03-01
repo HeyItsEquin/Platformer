@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://dwsvrdr6egww5"]
 
 [ext_resource type="Script" uid="uid://j4v6tyagsd1s" path="res://main_menu.gd" id="1_i26rj"]
+[ext_resource type="Texture2D" uid="uid://dyaqvpxofteuj" path="res://Assets/sprites/background/TitleScreen.png" id="2_eiy7p"]
+[ext_resource type="FontFile" uid="uid://bbr8jbmqq0a0k" path="res://Assets/Fonts/BebasNeue-Regular.ttf" id="3_h7a2f"]
 
 [sub_resource type="Theme" id="Theme_kjwba"]
 default_font_size = 48
@@ -16,11 +18,29 @@ script = ExtResource("1_i26rj")
 
 [node name="Button" type="Button" parent="." unique_id=33670807]
 layout_mode = 0
-offset_left = 424.0
-offset_top = 272.0
-offset_right = 736.0
-offset_bottom = 368.0
+offset_left = 115.0
+offset_top = 233.0
+offset_right = 427.0
+offset_bottom = 329.0
 theme = SubResource("Theme_kjwba")
 text = "Start"
+
+[node name="TitleScreen" type="Sprite2D" parent="." unique_id=707390494]
+z_index = -3
+position = Vector2(577, 324.99997)
+scale = Vector2(1.1230469, 1.1215278)
+texture = ExtResource("2_eiy7p")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=922051062]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 128.0
+offset_right = 506.0
+offset_bottom = 239.0
+theme_override_fonts/normal_font = ExtResource("3_h7a2f")
+theme_override_font_sizes/normal_font_size = 86
+text = "Mindslime"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

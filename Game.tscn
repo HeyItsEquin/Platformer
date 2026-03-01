@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c1ytbl50qg2aq" path="res://player.tscn" id="1_km16d"]
 [ext_resource type="Texture2D" uid="uid://cr1nyr5kn5m5o" path="res://Assets/sprites/background/level1/Brain Sprite Sheet.png" id="2_xkndl"]
-[ext_resource type="Script" path="res://main_camera.gd" id="3_u44n3"]
+[ext_resource type="Script" uid="uid://ctqk1v2xy2w3t" path="res://main_camera.gd" id="3_u44n3"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wbfu4"]
 
@@ -57,6 +57,7 @@ position = Vector2(560, 632)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=909830384]
 shape = SubResource("WorldBoundaryShape2D_wbfu4")
+disabled = true
 
 [node name="GroundTiles" type="TileMapLayer" parent="Ground" unique_id=439338694]
 use_parent_material = true

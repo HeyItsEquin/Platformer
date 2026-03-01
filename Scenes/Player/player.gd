@@ -94,6 +94,9 @@ func update_animation() -> void:
 	if animation_locked:
 		return
 
+	if is_burrow_anim_playing():
+		return
+
 	match jump_state:
 		JumpState.TAKEOFF:
 			state_timer -= 1
@@ -134,20 +137,22 @@ func update_animation() -> void:
 			elif velocity.x != 0 and not (is_burrowed or is_burrowing):
 				$PlayerSprite.play("moving")
 			elif burrow_state == BurrowState.BURROWED:
-				print("Play in burrow anim")
 				$PlayerSprite.play("in_burrow")
 			elif not is_burrowing and not is_burrowed:
 				$PlayerSprite.play("idle")
+
+func is_burrow_anim_playing() -> bool:
+	return burrow_state == BurrowState.ENTERING or burrow_state == BurrowState.EXITING
 
 func update_burrow() -> void:
 	match burrow_state:
 		BurrowState.ENTERING:
 			if not is_on_floor():
 				set_burrow_state(BurrowState.NONE)
-			elif not $PlayerSprite.is_playing():
+			elif $PlayerSprite.animation == "enter_burrow" and not $PlayerSprite.is_playing():
 				set_burrow_state(BurrowState.BURROWED)
 		BurrowState.EXITING:
-			if not $PlayerSprite.is_playing():
+			if $PlayerSprite.animation == "exit_burrow" and not $PlayerSprite.is_playing():
 				set_burrow_state(BurrowState.NONE)
 
 func set_burrow_state(new: BurrowState) -> void:
@@ -224,7 +229,8 @@ func exit_burrow(jumped: bool) -> void:
 		set_burrow_state(BurrowState.EXITING)
 
 func can_exit_burrow() -> bool:
-	return burrow_state == BurrowState.BURROWED and should_burrow and not would_collide_with_size(collision_height)
+	var collides = would_collide_with_size(collision_height)
+	return burrow_state == BurrowState.BURROWED and should_burrow and not collides
 
 # Don't ask me how this works, I don't want to think about it
 func would_collide_with_size(new_height: float) -> bool:
@@ -234,7 +240,8 @@ func would_collide_with_size(new_height: float) -> bool:
 	var shape = RectangleShape2D.new()
 	shape.size = Vector2(($CollisionShape.shape as RectangleShape2D).size.x, new_height)
 
-	var offset = (collision_height - new_height) / 2.0
+	var current_height = ($CollisionShape.shape as RectangleShape2D).size.y
+	var offset = (current_height - new_height) / 2.0
 	var shape_transform = global_transform
 	shape_transform.origin.y += COLLISION_OFFSET_Y + offset
 

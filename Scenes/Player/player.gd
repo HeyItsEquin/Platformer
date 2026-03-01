@@ -4,7 +4,7 @@ extends CharacterBody2D
 @export var burrow_move_speed = 200.0
 @export var burrow_wall_move_speed = 200.0
 @export var jump_force_wall = 400.0
-@export var jump_force_wall_horizontal = 200.0
+@export var jump_force_wall_horizontal = 400.0
 @export var jump_force_standard = 500
 @export var jump_force_burrowed = 700
 @export var jump_cut_multiplier = 0.5

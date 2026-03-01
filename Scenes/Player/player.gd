@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal scene_loaded(player: CharacterBody2D)
+
 @export var move_speed = 400.0
 @export var burrow_move_speed = 200.0 # Movement speed while burrowed
 @export var jump_force = 500 
@@ -215,3 +217,6 @@ func get_target_collider_height() -> float:
 
 func _on_player_sprite_animation_finished() -> void:
 	pass
+
+func load_level() -> void:
+	emit_signal("scene_loaded", self)

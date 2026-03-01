@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://ccmeoeru88kip"]
 
 [ext_resource type="Texture2D" uid="uid://cr1nyr5kn5m5o" path="res://Assets/sprites/background/level1/Brain Sprite Sheet.png" id="1_kyxg0"]
-[ext_resource type="Script" uid="uid://71hidu5rlk5d" path="res://level_1.gd" id="1_mc20k"]
+[ext_resource type="Script" uid="uid://71hidu5rlk5d" path="res://Scenes/Level1/level_1.gd" id="1_mc20k"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kyxg0"]
 texture = ExtResource("1_kyxg0")

@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://xq82tjj8r4vu"]
+
+[ext_resource type="Script" uid="uid://clmrbmwycf7cn" path="res://Scenes/Level3/level_3.gd" id="1_dpiy1"]
+
+[node name="Level3" type="Node2D" unique_id=1704323650]
+script = ExtResource("1_dpiy1")
+
+[node name="PlayerSpawn" type="Node2D" parent="." unique_id=1072296316]
+position = Vector2(576, 320)
+
+[node name="PlayerSpawn2" type="Node2D" parent="." unique_id=1566358822]
+position = Vector2(576, 320)

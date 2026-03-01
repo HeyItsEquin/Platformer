@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c1ytbl50qg2aq"]
 
-[ext_resource type="Script" uid="uid://bekfnss3cob5l" path="res://player.gd" id="1_dgfqp"]
+[ext_resource type="Script" uid="uid://bekfnss3cob5l" path="res://Scenes/Player/player.gd" id="1_dgfqp"]
 [ext_resource type="Texture2D" uid="uid://hf2mjurbkjcc" path="res://Assets/sprites/player/SlimeIdle.png" id="2_dw050"]
 [ext_resource type="Texture2D" uid="uid://b1ojti6h0l2tl" path="res://Assets/sprites/player/SlimeApex.png" id="3_b26j0"]
 [ext_resource type="Texture2D" uid="uid://dgtovofhef23l" path="res://Assets/sprites/player/SlimeBurrow.png" id="3_n7ghd"]
@@ -254,7 +254,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="CharacterBody2D" unique_id=696115482]
+[node name="Player" type="CharacterBody2D" unique_id=696115482 groups=["Player"]]
 script = ExtResource("1_dgfqp")
 
 [node name="CollisionShape" type="CollisionShape2D" parent="." unique_id=1848220456]

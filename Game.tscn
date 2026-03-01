@@ -1,19 +1,6 @@
 [gd_scene format=3 uid="uid://hc2hxbn5nags"]
 
-[ext_resource type="PackedScene" uid="uid://c1ytbl50qg2aq" path="res://player.tscn" id="1_km16d"]
-[ext_resource type="PackedScene" uid="uid://ccmeoeru88kip" path="res://Level1.tscn" id="3_sb48q"]
-[ext_resource type="Script" uid="uid://ctqk1v2xy2w3t" path="res://main_camera.gd" id="3_u44n3"]
+[ext_resource type="Script" uid="uid://0fobrf6syak7" path="res://game.gd" id="1_sb48q"]
 
 [node name="Game" type="Node2D" unique_id=44623282]
-
-[node name="Player" parent="." unique_id=1820902120 groups=["Player"] instance=ExtResource("1_km16d")]
-position = Vector2(496, 640)
-move_speed_transition_speed = 8.0
-
-[node name="MainCamera" type="Camera2D" parent="." unique_id=1645767840 node_paths=PackedStringArray("follow_target") groups=["Camera"]]
-zoom = Vector2(2, 2)
-script = ExtResource("3_u44n3")
-follow_target = NodePath("../Player")
-height_offset = 64.0
-
-[node name="Level1" parent="." unique_id=709307873 instance=ExtResource("3_sb48q")]
+script = ExtResource("1_sb48q")

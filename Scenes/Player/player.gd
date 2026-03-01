@@ -201,8 +201,8 @@ func exit_burrow(jumped: bool) -> void:
 		is_burrowing = true
 		use_burrowed_speed = false
 		should_jump = false
-		$PlayerSprite.play("enter_burrow", -1.6, true)
-		await get_tree().create_timer($PlayerSprite.sprite_frames.get_animation_speed("enter_burrow") * ENTER_BURROW_FRAMES / 60.0).timeout
+		$PlayerSprite.play("exit_burrow", 1.3)
+		await $PlayerSprite.animation_finished
 		should_jump = true
 		is_burrowed = false
 		is_burrowing = false

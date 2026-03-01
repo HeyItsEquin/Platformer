@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b1ojti6h0l2tl" path="res://Assets/sprites/player/SlimeApex.png" id="3_b26j0"]
 [ext_resource type="Texture2D" uid="uid://dgtovofhef23l" path="res://Assets/sprites/player/SlimeBurrow.png" id="3_n7ghd"]
 [ext_resource type="Texture2D" uid="uid://ds0yh43nxj7qo" path="res://Assets/sprites/player/SlimeFall.png" id="4_n7ghd"]
+[ext_resource type="Texture2D" uid="uid://c26y8288wr1mh" path="res://Assets/sprites/player/SlimeBurrowWall.png" id="5_74mp2"]
 [ext_resource type="Texture2D" uid="uid://cvvb6p1577gc2" path="res://Assets/sprites/player/SlimeLand.png" id="5_dw050"]
 [ext_resource type="Texture2D" uid="uid://b5ub2rf8olpif" path="res://Assets/sprites/player/SlimeRise.png" id="6_nvl01"]
 [ext_resource type="Texture2D" uid="uid://x0003wxnxjeh" path="res://Assets/sprites/player/SlimeJumpStart.png" id="7_ivps1"]
@@ -54,6 +55,14 @@ region = Rect2(66, 0, 32, 32)
 atlas = ExtResource("3_n7ghd")
 region = Rect2(99, 0, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_qr1w5"]
+atlas = ExtResource("5_74mp2")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ythyg"]
+atlas = ExtResource("5_74mp2")
+region = Rect2(33, 0, 32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_oikmp"]
 atlas = ExtResource("3_n7ghd")
 region = Rect2(99, 33, 32, 32)
@@ -65,6 +74,14 @@ region = Rect2(0, 66, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_ks1b7"]
 atlas = ExtResource("3_n7ghd")
 region = Rect2(33, 66, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rukb4"]
+atlas = ExtResource("5_74mp2")
+region = Rect2(33, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4no11"]
+atlas = ExtResource("5_74mp2")
+region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bwjto"]
 atlas = ExtResource("2_dw050")
@@ -89,6 +106,18 @@ region = Rect2(33, 33, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_rcvs5"]
 atlas = ExtResource("3_n7ghd")
 region = Rect2(66, 33, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bmb2s"]
+atlas = ExtResource("5_74mp2")
+region = Rect2(66, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ur3l4"]
+atlas = ExtResource("5_74mp2")
+region = Rect2(0, 33, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ahak"]
+atlas = ExtResource("5_74mp2")
+region = Rect2(33, 33, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_op7ga"]
 atlas = ExtResource("3_b26j0")
@@ -202,6 +231,17 @@ animations = [{
 "speed": 5.0
 }, {
 "frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qr1w5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ythyg")
+}],
+"loop": false,
+"name": &"enter_wall",
+"speed": 5.0
+}, {
+"frames": [{
 "duration": 0.8,
 "texture": SubResource("AtlasTexture_oikmp")
 }, {
@@ -213,6 +253,17 @@ animations = [{
 }],
 "loop": false,
 "name": &"exit_burrow",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rukb4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4no11")
+}],
+"loop": false,
+"name": &"exit_wall",
 "speed": 5.0
 }, {
 "frames": [{
@@ -241,6 +292,20 @@ animations = [{
 }],
 "loop": true,
 "name": &"in_burrow",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bmb2s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ur3l4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ahak")
+}],
+"loop": true,
+"name": &"in_wall",
 "speed": 5.0
 }, {
 "frames": [{
@@ -342,6 +407,6 @@ shape = SubResource("RectangleShape2D_hqtel")
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="." unique_id=1229430777]
 sprite_frames = SubResource("SpriteFrames_onrkg")
-animation = &"idle"
+animation = &"exit_wall"
 
 [connection signal="animation_finished" from="PlayerSprite" to="." method="_on_player_sprite_animation_finished"]

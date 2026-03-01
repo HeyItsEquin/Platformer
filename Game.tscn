@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://hc2hxbn5nags"]
+[gd_scene format=4 uid="uid://hc2hxbn5nags"]
 
 [ext_resource type="Script" uid="uid://0fobrf6syak7" path="res://game.gd" id="1_sb48q"]
 [ext_resource type="PackedScene" uid="uid://c1ytbl50qg2aq" path="res://Scenes/Player/player.tscn" id="2_sb48q"]
@@ -31,9 +31,8 @@ visible = true
 
 [node name="AudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1840682615]
 stream = ExtResource("5_t88pq")
-volume_db = 4.0
 
 [node name="BackgroundMusic" type="AudioStreamPlayer2D" parent="." unique_id=1089601070]
-stream = ExtResource("6_r0x5m")
+stream = SubResource("AudioStreamWAV_sb48q")
 
 [editable path="Camera"]

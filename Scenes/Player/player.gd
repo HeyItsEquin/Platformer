@@ -298,7 +298,6 @@ func process_wall_movement(delta: float) -> void:
 		is_jumping = true
 		jump_state = JumpState.TAKEOFF
 		state_timer = TAKEOFF_FRAMES
-		$PlayerSprite.flip_h = true
 		jump_sound.play()
 		return
 

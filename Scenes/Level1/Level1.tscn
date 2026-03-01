@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dsi5j3d5qv81h" path="res://Scenes/LightningGate/LightningGate.tscn" id="4_teab5"]
 [ext_resource type="PackedScene" uid="uid://h38vqs7lc70b" path="res://Scenes/Checkpoint/Checkpoint.tscn" id="5_ti6lw"]
 [ext_resource type="PackedScene" uid="uid://cd0d0kx2v03l1" path="res://Scenes/LightningGate/LightningGatePeriodic.tscn" id="6_hbmps"]
+[ext_resource type="FontFile" uid="uid://dhshm3mdmfvrc" path="res://Assets/Fonts/Karla-VariableFont_wght.ttf" id="8_hrs7e"]
 [ext_resource type="PackedScene" uid="uid://dfekhlj6siadm" path="res://Scenes/LevelEnd/LevelEnd.tscn" id="8_iil5s"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hluqf"]
@@ -225,7 +226,7 @@ offset_left = 689.0
 offset_top = 464.0
 offset_right = 870.0
 offset_bottom = 569.0
-theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_fonts/normal_font = ExtResource("8_hrs7e")
 theme_override_font_sizes/normal_font_size = 12
 text = "Press [Space] to jump
 Hold [Space] to jump higher!"
@@ -237,7 +238,7 @@ offset_left = 924.0
 offset_top = 409.0
 offset_right = 1048.0
 offset_bottom = 449.0
-theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_fonts/normal_font = ExtResource("8_hrs7e")
 theme_override_font_sizes/normal_font_size = 10
 text = "Hold [LCtrl] to burrow into the ground"
 horizontal_alignment = 1
@@ -248,7 +249,7 @@ offset_left = 1506.0
 offset_top = 602.0
 offset_right = 1711.0
 offset_bottom = 654.0
-theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_fonts/normal_font = ExtResource("8_hrs7e")
 theme_override_font_sizes/normal_font_size = 10
 text = "Hold [LCtrl] to burrow into the ground and then press [Space] to perform a burrow jump"
 horizontal_alignment = 1
@@ -259,7 +260,7 @@ offset_left = 565.0
 offset_top = -107.0
 offset_right = 762.0
 offset_bottom = -55.0
-theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_fonts/normal_font = ExtResource("8_hrs7e")
 theme_override_font_sizes/normal_font_size = 10
 text = "Neurons emit dangerous electricity that will kill you if you touch it"
 horizontal_alignment = 1
@@ -270,7 +271,7 @@ offset_left = 744.0
 offset_top = -493.0
 offset_right = 941.0
 offset_bottom = -441.0
-theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_fonts/normal_font = ExtResource("8_hrs7e")
 theme_override_font_sizes/normal_font_size = 10
 text = "Hold [LCtrl] while pushing against an infected wall to burrow into it.
 You can even do this midair!"
@@ -282,7 +283,7 @@ offset_left = 887.0
 offset_top = -940.0
 offset_right = 1084.0
 offset_bottom = -888.0
-theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_fonts/normal_font = ExtResource("8_hrs7e")
 theme_override_font_sizes/normal_font_size = 10
 text = "Press [Space] while burrowed into a wall to jump out of it"
 horizontal_alignment = 1

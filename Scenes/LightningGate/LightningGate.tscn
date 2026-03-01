@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://dsi5j3d5qv81h"]
+
+[ext_resource type="PackedScene" uid="uid://cftn8668jivx3" path="res://Scenes/Obstacle/Obstacle.tscn" id="1_rvrp8"]
+[ext_resource type="Script" uid="uid://mx8qoju0nowg" path="res://Scenes/LightningGate/lightning_gate.gd" id="2_42qh0"]
+[ext_resource type="Texture2D" uid="uid://btjhonxx2xnim" path="res://Assets/sprites/Lighting.png" id="3_uhx0c"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0cnu5"]
+size = Vector2(80, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_65qro"]
+atlas = ExtResource("3_uhx0c")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l3vjr"]
+atlas = ExtResource("3_uhx0c")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_82n75"]
+atlas = ExtResource("3_uhx0c")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s55wn"]
+atlas = ExtResource("3_uhx0c")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b8gfg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_65qro")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l3vjr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_82n75")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s55wn")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="LightningGate" unique_id=254124828 instance=ExtResource("1_rvrp8")]
+script = ExtResource("2_42qh0")
+
+[node name="CollisionShape" parent="." index="0" unique_id=316245950]
+shape = SubResource("RectangleShape2D_0cnu5")
+
+[node name="ObstacleSprite" type="AnimatedSprite2D" parent="." index="1" unique_id=1108451378]
+scale = Vector2(2.375, 0.5)
+sprite_frames = SubResource("SpriteFrames_b8gfg")
+frame_progress = 0.87966126

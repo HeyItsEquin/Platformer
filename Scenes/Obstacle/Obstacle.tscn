@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cftn8668jivx3"]
+
+[ext_resource type="Script" uid="uid://bd614yihwcf04" path="res://Scenes/Obstacle/obstacle.gd" id="1_f02im"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gt07e"]
+
+[node name="Obstacle" type="StaticBody2D" unique_id=254124828]
+script = ExtResource("1_f02im")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="." unique_id=316245950]
+shape = SubResource("CircleShape2D_gt07e")

@@ -1,14 +1,22 @@
 [gd_scene format=3 uid="uid://b8ex4a2fjgkif"]
 
 [ext_resource type="Script" uid="uid://tdajsdkj227w" path="res://Scenes/Camera/camera.gd" id="1_0jrrr"]
-[ext_resource type="Texture2D" uid="uid://d2wqx26axtp2o" path="res://Assets/sprites/background/level1/BackGround_Brain.png" id="2_d7xdh"]
+[ext_resource type="Script" uid="uid://f1tes7oq15t0" path="res://Scenes/Camera/brain.gd" id="2_d7xdh"]
+
+[sub_resource type="Gradient" id="Gradient_d7xdh"]
+colors = PackedColorArray(0.49019608, 0.16470589, 0.13333334, 1, 0.32941177, 0.11764706, 0.08627451, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_lwwvb"]
+gradient = SubResource("Gradient_d7xdh")
+fill_to = Vector2(0, 1)
 
 [node name="Camera" type="Camera2D" unique_id=1163935152 groups=["Camera"]]
-zoom = Vector2(2, 2)
+zoom = Vector2(1.5, 1.5)
 script = ExtResource("1_0jrrr")
 
-[node name="Brain" type="Sprite2D" parent="." unique_id=270523450]
+[node name="Brain" type="Sprite2D" parent="." unique_id=1670166393]
 visible = false
 show_behind_parent = true
 z_index = -1
-texture = ExtResource("2_d7xdh")
+texture = SubResource("GradientTexture2D_lwwvb")
+script = ExtResource("2_d7xdh")

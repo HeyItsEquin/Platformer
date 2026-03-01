@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://cd0d0kx2v03l1"]
+
+[ext_resource type="PackedScene" uid="uid://dsi5j3d5qv81h" path="res://Scenes/LightningGate/LightningGate.tscn" id="1_5iikh"]
+[ext_resource type="Script" uid="uid://8hfp5x8et6hw" path="res://Scenes/LightningGate/lightning_gate_periodic.gd" id="2_xndhj"]
+
+[node name="LightningGate" unique_id=254124828 instance=ExtResource("1_5iikh")]
+script = ExtResource("2_xndhj")
+
+[node name="CollisionShape" parent="." index="0" unique_id=316245950]
+position = Vector2(-3.0000057, 0)

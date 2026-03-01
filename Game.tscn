@@ -25,10 +25,10 @@ visible = true
 
 [node name="Level1" parent="." unique_id=709307873 instance=ExtResource("4_r0x5m")]
 
-[node name="AudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1840682615]
+[node name="AudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1480695513]
 stream = ExtResource("5_t88pq")
 
-[node name="BackgroundMusic" type="AudioStreamPlayer2D" parent="." unique_id=1089601070]
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1529741774]
 stream = ExtResource("6_r0x5m")
 
 [editable path="Camera"]

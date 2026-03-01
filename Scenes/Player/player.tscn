@@ -117,6 +117,14 @@ region = Rect2(33, 0, 32, 32)
 atlas = ExtResource("8_urp6f")
 region = Rect2(0, 33, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_gk6dx"]
+atlas = ExtResource("7_ivps1")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jhyir"]
+atlas = ExtResource("7_ivps1")
+region = Rect2(33, 0, 32, 32)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_onrkg"]
 animations = [{
 "frames": [{
@@ -252,6 +260,17 @@ animations = [{
 "loop": true,
 "name": &"moving",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gk6dx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jhyir")
+}],
+"loop": true,
+"name": &"tile_exit_jump",
+"speed": 5.0
 }]
 
 [node name="Player" type="CharacterBody2D" unique_id=696115482 groups=["Player"]]
@@ -264,6 +283,5 @@ shape = SubResource("RectangleShape2D_hqtel")
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="." unique_id=1229430777]
 sprite_frames = SubResource("SpriteFrames_onrkg")
 animation = &"idle"
-frame_progress = 0.6620455
 
 [connection signal="animation_finished" from="PlayerSprite" to="." method="_on_player_sprite_animation_finished"]

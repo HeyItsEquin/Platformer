@@ -1,10 +1,10 @@
 extends CharacterBody2D
 
-signal scene_loaded(player: CharacterBody2D)
-
 @export var move_speed = 400.0
 @export var burrow_move_speed = 200.0 # Movement speed while burrowed
-@export var jump_force = 500 
+@export var jump_force_standard = 500
+@export var jump_force_burrowed = 700 # Jump force when jumping out of a burrow
+@export var jump_force = jump_force_standard 
 @export var jump_cut_multiplier = 0.5 #Multiplier for gravity when a jump is cut off
 @export var fall_gravity_multiplier = 1.8 # Gravitational multiplier when falling from a jump
 @export var collision_height_jumping = 32.0 # Hitbox height whilst jumping
@@ -25,10 +25,12 @@ enum JumpState { NONE, TAKEOFF, RISING, APEX, FALLING, LANDING, DROPPING } # Dif
 var jump_state = JumpState.NONE # Current stage of the jump, 'NONE' means not jumping. For use in animations
 
 var should_move = true # Can the player currently move
+var should_jump = true # Can the player currently jump
 
 const JUMP_APEX_THRESHOLD = 50 # The velocity threshold wherein a jump is considered at its 'apex'
 
 const TAKEOFF_FRAMES = 0 # Amount of frames that the takeoff animation has
+const TAKEOFF_FRAMES_BURROWED = 4 # Amount of frames that the takeoff (burrowed ver.) animation has
 const LANDING_FRAMES = 4 # Amount of frames the landing animation has
 const ENTER_BURROW_FRAMES = 4 # Amount of frames the enter burrow animation has
 const DROPPING_FRAMES = 4 # Amount of frames the dropping animation has
@@ -122,46 +124,73 @@ func process_input(delta: float) -> void:
 	if Input.is_action_just_released("move_up"):
 		jump_cut()
 
+	if Input.is_action_just_pressed("move_up") and is_burrowed:
+		exit_burrow(true)
+
 	if Input.is_action_pressed("burrow"):
 		enter_burrow()
 	else:
-		exit_burrow()
+		exit_burrow(false)
 
-func jump() -> void:
-	if is_on_floor():
+func jump(burrowed: bool = false) -> void:
+	if is_on_floor() and should_jump:
 		velocity.y = -jump_force
 		is_jumping = true
 		jump_state = JumpState.TAKEOFF
 		state_timer = TAKEOFF_FRAMES
+
+		if burrowed:
+			velocity.y = -jump_force_burrowed
+			state_timer = TAKEOFF_FRAMES_BURROWED
+			$PlayerSprite.play("tile_exit_jump")
 
 func jump_cut() -> void:
 	if is_jumping and velocity.y < 0:
 		velocity.y *= jump_cut_multiplier
 
 func enter_burrow() -> void:
-	if is_jumping or is_burrowed: # Can't burrow while jumping and if already burrowed do nothing
+	if not can_burrow():
 		return
 
 	is_burrowing = true
 	use_burrowed_speed = true
+	should_jump = false
 	$PlayerSprite.play("enter_burrow", 1.4)
 	await $PlayerSprite.animation_finished
+	should_jump = true
 	is_burrowing = false
 	is_burrowed = true
 	
-func exit_burrow() -> void:
+func can_burrow() -> bool:
+	if is_burrowed or is_burrowing:
+		return false
+
+	if is_jumping:
+		return false
+
+	return true
+
+func exit_burrow(jumped: bool) -> void:
 	if not can_exit_burrow():
 		return
 
-	is_burrowing = true
-	use_burrowed_speed = false
-	$PlayerSprite.play("enter_burrow", -1.6, true)
-	await get_tree().create_timer($PlayerSprite.sprite_frames.get_animation_speed("enter_burrow") * ENTER_BURROW_FRAMES / 60.0).timeout
-	is_burrowed = false
-	is_burrowing = false
+	if jumped:
+		is_burrowed = false
+		use_burrowed_speed = false
+		should_jump = true
+		jump(true)
+	else:
+		is_burrowing = true
+		use_burrowed_speed = false
+		should_jump = false
+		$PlayerSprite.play("enter_burrow", -1.6, true)
+		await get_tree().create_timer($PlayerSprite.sprite_frames.get_animation_speed("enter_burrow") * ENTER_BURROW_FRAMES / 60.0).timeout
+		should_jump = true
+		is_burrowed = false
+		is_burrowing = false
 	
 func can_exit_burrow() -> bool:
-	return is_burrowed and not would_collide_with_size(collision_height)
+	return (is_burrowed and not is_burrowing) and not would_collide_with_size(collision_height)
 
 # Don't ask me how this works, I don't want to think about it
 func would_collide_with_size(new_height: float) -> bool:
@@ -217,6 +246,3 @@ func get_target_collider_height() -> float:
 
 func _on_player_sprite_animation_finished() -> void:
 	pass
-
-func load_level() -> void:
-	emit_signal("scene_loaded", self)

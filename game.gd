@@ -7,7 +7,8 @@ const SCENE_PSYCH: PackedScene = preload("res://Scenes/Level2/Level2.tscn")
 const SCENE_CORE: PackedScene = preload("res://Scenes/Level3/Level3.tscn")
 
 func _ready() -> void:
-	load_level(Levels.SHELL)
+	# load_level(Levels.SHELL)
+	pass
 
 enum Levels { SHELL, PSYCH, CORE }
 func load_level(lvl: Levels) -> void:

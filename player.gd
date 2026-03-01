@@ -8,6 +8,8 @@ extends CharacterBody2D
 @export var collision_height = 24.0 # Hitbox height
 @export var collision_height_burrowed = 8.0 # Hitbox height while burrowed
 
+const COLLISION_OFFSET_Y = 4
+
 const GRAVITY = 980
 
 var is_jumping = false
@@ -131,7 +133,25 @@ func exit_burrow() -> void:
 	is_burrowing = false
 	
 func can_exit_burrow() -> bool:
-	return is_burrowed
+	return is_burrowed and not would_collide_with_size(collision_height)
+
+# Don't ask me how this works, I don't want to think about it
+func would_collide_with_size(new_height: float) -> bool:
+	var space = get_world_2d().direct_space_state
+	var query = PhysicsShapeQueryParameters2D.new()
+
+	var shape = RectangleShape2D.new()
+	shape.size = Vector2(($CollisionShape.shape as RectangleShape2D).size.x, new_height)
+
+	var offset = (collision_height - new_height) / 2.0
+	var shape_transform = global_transform
+	shape_transform.origin.y += COLLISION_OFFSET_Y + offset
+
+	query.shape = shape
+	query.transform = shape_transform
+	query.exclude = [self]
+
+	return space.intersect_shape(query).size() > 0
 
 func move(dir: MoveDir) -> void:
 	if dir == MoveDir.RIGHT and should_move:
@@ -151,7 +171,7 @@ func update_collider() -> void:
 	var target_height = collision_height if not is_burrowed else collision_height_burrowed
 	var offset = (collision_height - target_height) / 2.0
 	($CollisionShape.shape as RectangleShape2D).size.y = target_height
-	$CollisionShape.position.y = 4 + offset
+	$CollisionShape.position.y = COLLISION_OFFSET_Y + offset
 
 enum MoveDir {
 	RIGHT = 0,

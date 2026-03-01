@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://hc2hxbn5nags"]
 
 [ext_resource type="PackedScene" uid="uid://c1ytbl50qg2aq" path="res://player.tscn" id="1_km16d"]
-[ext_resource type="PackedScene" uid="uid://ccmeoeru88kip" path="res://Level1.tscn" id="3_sb48q"]
+[ext_resource type="PackedScene" path="res://Level1.tscn" id="3_sb48q"]
+[ext_resource type="Texture2D" uid="uid://d2wqx26axtp2o" path="res://Assets/sprites/background/level1/BackGround_Brain.png" id="3_t88pq"]
 [ext_resource type="Script" uid="uid://ctqk1v2xy2w3t" path="res://main_camera.gd" id="3_u44n3"]
 
 [node name="Game" type="Node2D" unique_id=44623282]
@@ -15,5 +16,11 @@ zoom = Vector2(2, 2)
 script = ExtResource("3_u44n3")
 follow_target = NodePath("../Player")
 height_offset = 64.0
+
+[node name="BackGroundBrain" type="Sprite2D" parent="MainCamera" unique_id=1351156493]
+show_behind_parent = true
+z_index = -7
+position = Vector2(2, -1)
+texture = ExtResource("3_t88pq")
 
 [node name="Level1" parent="." unique_id=709307873 instance=ExtResource("3_sb48q")]

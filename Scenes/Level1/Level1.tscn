@@ -74,6 +74,3 @@ tile_set = SubResource("TileSet_vxb1s")
 
 [node name="PlayerSpawn" type="Node2D" parent="." unique_id=1422003376]
 position = Vector2(408, 624)
-
-[node name="Checkpoint" parent="." unique_id=367929449 instance=ExtResource("3_vxb1s")]
-position = Vector2(1280, 464)

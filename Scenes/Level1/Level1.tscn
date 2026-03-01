@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://h38vqs7lc70b" path="res://Scenes/Checkpoint/Checkpoint.tscn" id="5_ti6lw"]
 [ext_resource type="PackedScene" uid="uid://cd0d0kx2v03l1" path="res://Scenes/LightningGate/LightningGatePeriodic.tscn" id="6_hbmps"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_teab5"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hluqf"]
 texture = ExtResource("2_q3h6c")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
@@ -20,7 +20,7 @@ texture_region_size = Vector2i(32, 32)
 1:1/0 = 0
 1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yq8de"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iil5s"]
 texture = ExtResource("3_537x7")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
@@ -64,7 +64,7 @@ texture_region_size = Vector2i(32, 32)
 4:3/0 = 0
 4:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, -0.31863022, -16, 0.63726044)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iil5s"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hrs7e"]
 texture = ExtResource("4_hluqf")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
@@ -133,9 +133,9 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 custom_data_layer_0/name = "burrowable"
 custom_data_layer_0/type = 1
-sources/1 = SubResource("TileSetAtlasSource_yq8de")
-sources/0 = SubResource("TileSetAtlasSource_teab5")
-sources/2 = SubResource("TileSetAtlasSource_iil5s")
+sources/1 = SubResource("TileSetAtlasSource_iil5s")
+sources/0 = SubResource("TileSetAtlasSource_hluqf")
+sources/2 = SubResource("TileSetAtlasSource_hrs7e")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ti6lw"]
 size = Vector2(160, 20)

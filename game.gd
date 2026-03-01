@@ -12,6 +12,8 @@ func _ready() -> void:
 
 enum Levels { SHELL, PSYCH, CORE }
 func load_level(lvl: Levels) -> void:
+	remove_all_children()
+
 	match lvl:
 		Levels.SHELL:
 			load_level_scenes(SCENE_SHELL, "BRAIN")
@@ -36,3 +38,9 @@ func load_level_scenes(scene: PackedScene, bg: String) -> void:
 	add_child(level)
 
 	level.Initialize(player)
+
+func remove_all_children() -> void:
+	var children = get_children()
+
+	for child in children:
+		child.queue_free()

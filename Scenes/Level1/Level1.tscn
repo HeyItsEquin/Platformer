@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dsi5j3d5qv81h" path="res://Scenes/LightningGate/LightningGate.tscn" id="4_teab5"]
 [ext_resource type="PackedScene" uid="uid://h38vqs7lc70b" path="res://Scenes/Checkpoint/Checkpoint.tscn" id="5_ti6lw"]
 [ext_resource type="PackedScene" uid="uid://cd0d0kx2v03l1" path="res://Scenes/LightningGate/LightningGatePeriodic.tscn" id="6_hbmps"]
+[ext_resource type="PackedScene" uid="uid://dfekhlj6siadm" path="res://Scenes/LevelEnd/LevelEnd.tscn" id="8_iil5s"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hluqf"]
 texture = ExtResource("2_q3h6c")
@@ -289,6 +290,9 @@ shape = SubResource("RectangleShape2D_f4xp5")
 [node name="ObstacleSprite" parent="LightningGate4" index="1" unique_id=1108451378]
 position = Vector2(112.51319, 10.386352)
 scale = Vector2(18.994461, 0.5)
+
+[node name="LevelEnd" parent="." unique_id=1440991750 instance=ExtResource("8_iil5s")]
+position = Vector2(1448, -1440)
 
 [editable path="LightningGate"]
 [editable path="LightningGate2"]

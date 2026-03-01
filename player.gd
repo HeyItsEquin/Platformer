@@ -68,7 +68,7 @@ func update_animation() -> void:
 				jump_state = JumpState.NONE
 		JumpState.NONE:
 			if velocity.x != 0:
-				$PlayerSprite.play("moving");
+				$PlayerSprite.play("moving")
 			else:
 				if is_burrowed:
 					$PlayerSprite.play("in_burrow")
@@ -89,8 +89,11 @@ func process_input() -> void:
 	if Input.is_action_just_released("move_up"):
 		jump_cut()
 
-	if Input.is_action_just_pressed("burrow"):
-		burrow()
+	if Input.is_action_pressed("burrow"):
+		enter_burrow()
+
+	if Input.is_action_just_released("burrow"):
+		exit_burrow()
 
 func jump() -> void:
 	if is_on_floor():
@@ -103,16 +106,26 @@ func jump_cut() -> void:
 	if is_jumping and velocity.y < 0:
 		velocity.y *= jump_cut_multiplier
 
-func burrow() -> void:
-	if is_jumping:
+func enter_burrow() -> void:
+	if is_jumping or is_burrowed: # Can't burrow while jumping and if already burrowed do nothing
 		return
-	should_move = false
+
 	is_burrowing = true
 	$PlayerSprite.play("enter_burrow")
 	await $PlayerSprite.animation_finished
 	is_burrowing = false
 	is_burrowed = true
-	should_move = true
+	
+func exit_burrow() -> void:
+	print("exit_burrow() called")
+
+	is_burrowing = true
+	$PlayerSprite.play_backwards("enter_burrow")
+	await $PlayerSprite.animation_finished
+	is_burrowing = false
+	is_burrowed = false
+
+	print(is_burrowed)
 	
 func move(dir: MoveDir) -> void:
 	if dir == MoveDir.RIGHT and should_move:

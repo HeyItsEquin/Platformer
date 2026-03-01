@@ -68,3 +68,4 @@ tile_set = SubResource("TileSet_sb48q")
 zoom = Vector2(2, 2)
 script = ExtResource("3_u44n3")
 follow_target = NodePath("../Player")
+follow_speed = 7.0

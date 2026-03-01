@@ -2,9 +2,6 @@
 
 [ext_resource type="Texture2D" uid="uid://cr1nyr5kn5m5o" path="res://Assets/sprites/background/level1/Brain Sprite Sheet.png" id="1_kyxg0"]
 [ext_resource type="Script" uid="uid://71hidu5rlk5d" path="res://Scenes/Level1/level_1.gd" id="1_mc20k"]
-<<<<<<< HEAD
-[ext_resource type="PackedScene" uid="uid://h38vqs7lc70b" path="res://Scenes/Checkpoint/Checkpoint.tscn" id="3_vxb1s"]
-=======
 [ext_resource type="Texture2D" uid="uid://svl4ekxbpnvb" path="res://Assets/sprites/LightingGates.png" id="2_vxb1s"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_teab5"]
@@ -14,7 +11,6 @@ texture_region_size = Vector2i(32, 32)
 1:0/0 = 0
 0:1/0 = 0
 1:1/0 = 0
->>>>>>> 02a0d4b496e2b633bc965d7c243ed567329c9928
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yq8de"]
 texture = ExtResource("1_kyxg0")

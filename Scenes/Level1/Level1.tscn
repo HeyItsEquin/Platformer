@@ -137,6 +137,58 @@ shape = SubResource("RectangleShape2D_hbmps")
 position = Vector2(-7.939249, 0)
 scale = Vector2(4.0055666, 0.5)
 
+[node name="TutorialPrompt1" type="RichTextLabel" parent="." unique_id=502887865]
+offset_left = 689.0
+offset_top = 464.0
+offset_right = 870.0
+offset_bottom = 569.0
+theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_font_sizes/normal_font_size = 12
+text = "Press [Space] to jump
+Hold [Space] to jump higher!"
+horizontal_alignment = 1
+
+[node name="TutorialPrompt2" type="RichTextLabel" parent="." unique_id=125729647]
+offset_left = 924.0
+offset_top = 409.0
+offset_right = 1048.0
+offset_bottom = 449.0
+theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_font_sizes/normal_font_size = 10
+text = "Hold [LCtrl] to burrow into the ground"
+horizontal_alignment = 1
+
+[node name="TutorialPrompt3" type="RichTextLabel" parent="." unique_id=1284055605]
+offset_left = 1506.0
+offset_top = 602.0
+offset_right = 1711.0
+offset_bottom = 654.0
+theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_font_sizes/normal_font_size = 10
+text = "Hold [LCtrl] to burrow into the ground and then press [Space] to perform a burrow jump"
+horizontal_alignment = 1
+
+[node name="TutorialPrompt4" type="RichTextLabel" parent="." unique_id=1718102968]
+offset_left = 565.0
+offset_top = -107.0
+offset_right = 762.0
+offset_bottom = -55.0
+theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_font_sizes/normal_font_size = 10
+text = "Neurons emit dangerous electricity that will kill you if you touch it"
+horizontal_alignment = 1
+
+[node name="TutorialPrompt5" type="RichTextLabel" parent="." unique_id=757740507]
+offset_left = 744.0
+offset_top = -493.0
+offset_right = 941.0
+offset_bottom = -441.0
+theme_override_colors/default_color = Color(1, 1, 0.5803922, 1)
+theme_override_font_sizes/normal_font_size = 10
+text = "Hold [LCtrl] while pushing against an infected wall to burrow into it.
+You can even do this midair!"
+horizontal_alignment = 1
+
 [editable path="LightningGate"]
 [editable path="LightningGate2"]
 [editable path="Checkpoint2"]

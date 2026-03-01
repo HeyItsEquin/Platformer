@@ -16,8 +16,8 @@ extends CharacterBody2D
 
 @export var level: Node2D
 @export var tilemap: TileMapLayer
-@export var background_music: AudioStreamPlayer2D
-@export var jump_sound: AudioStreamPlayer2D
+@export var background_music: AudioStreamPlayer
+@export var jump_sound: AudioStreamPlayer
 
 const COLLISION_OFFSET_Y = 4
 const GRAVITY = 980

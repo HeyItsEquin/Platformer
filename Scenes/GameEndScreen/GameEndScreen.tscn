@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://bhocqp0n2knsi"]
+
+[ext_resource type="Texture2D" uid="uid://e13v0jn0r1pc" path="res://Assets/sprites/background/WinScreen.png" id="1_jqd5c"]
+[ext_resource type="FontFile" uid="uid://bbr8jbmqq0a0k" path="res://Assets/Fonts/BebasNeue-Regular.ttf" id="2_cia6k"]
+
+[node name="GameEndScreen" type="Control" unique_id=1305333596]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WinScreen" type="Sprite2D" parent="." unique_id=1444135557]
+position = Vector2(576, 324)
+scale = Vector2(1.125, 1.125)
+texture = ExtResource("1_jqd5c")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=1098236376]
+layout_mode = 0
+offset_left = 624.0
+offset_top = 200.0
+offset_right = 1104.0
+offset_bottom = 456.0
+theme_override_fonts/normal_font = ExtResource("2_cia6k")
+theme_override_font_sizes/normal_font_size = 86
+text = "Thanks for playing!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="." unique_id=1245655745]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 600.0
+offset_right = 808.0
+offset_bottom = 640.0
+theme_override_fonts/normal_font = ExtResource("2_cia6k")
+theme_override_font_sizes/normal_font_size = 24
+text = "Made for HackClub Campfire Seattle 2026"
+vertical_alignment = 1

@@ -3,7 +3,7 @@ extends "res://Scenes/Obstacle/obstacle.gd"
 @export var next_level: Game.Levels
 
 func _ready() -> void:
-	assert(next_level)
+	pass
 
 func _on_player_collision(_player: CharacterBody2D) -> void:
-	Game.load_level(next_level)
+	get_tree().change_scene_to_file("res://Scenes/GameEndScreen/GameEndScreen.tscn")

@@ -29,6 +29,8 @@ var should_move = true
 var should_jump = true
 var should_burrow = true
 
+var burrow_cancelled = false
+
 const JUMP_APEX_THRESHOLD = 50
 
 const TAKEOFF_FRAMES = 0
@@ -44,6 +46,8 @@ var latest_checkpoint: Vector2
 func _ready() -> void:
 	assert(level)
 
+	latest_checkpoint = level.get_node("PlayerSpawn").position
+
 func _process(delta: float) -> void:
 	update_animation()
 	update_collider()
@@ -52,6 +56,14 @@ func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
 	process_input(delta)
 	move_and_slide()
+	check_collisions()
+
+func check_collisions() -> void:
+	for i in get_slide_collision_count():
+		var collision = get_slide_collision(i)
+		var collider = collision.get_collider()
+		if collider.is_in_group("Checkpoint"):
+			latest_checkpoint = collider.position
 
 func set_player_control(enabled: bool) -> void:
 	should_move = enabled
@@ -176,11 +188,19 @@ func enter_burrow() -> void:
 	if not can_burrow():
 		return
 
+	burrow_cancelled = false
 	is_burrowing = true
 	should_jump = false
 	use_burrowed_speed = true
 	$PlayerSprite.play("enter_burrow", 1.4)
 	await $PlayerSprite.animation_finished
+
+	if burrow_cancelled:
+		is_burrowing = false
+		use_burrowed_speed = false
+		should_jump = true
+		return
+
 	should_jump = true
 	is_burrowing = false
 	is_burrowed = true
@@ -195,6 +215,10 @@ func can_burrow() -> bool:
 	return true
 
 func exit_burrow(jumped: bool) -> void:
+	if is_burrowing and not is_burrowed:
+		burrow_cancelled = true
+		return
+
 	if not can_exit_burrow():
 		return
 
@@ -281,6 +305,8 @@ func respawn(location: Vector2 = position) -> void:
 	$PlayerSprite.play("idle")
 
 func get_latest_checkpoint() -> Vector2:
+	if latest_checkpoint != Vector2.ZERO:
+		return latest_checkpoint
 	return level.get_node("PlayerSpawn").position
 
 func debug() -> void:

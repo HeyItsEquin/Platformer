@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cr1nyr5kn5m5o" path="res://Assets/sprites/background/level1/Brain Sprite Sheet.png" id="1_kyxg0"]
 [ext_resource type="Script" uid="uid://71hidu5rlk5d" path="res://Scenes/Level1/level_1.gd" id="1_mc20k"]
+[ext_resource type="PackedScene" uid="uid://h38vqs7lc70b" path="res://Scenes/Checkpoint/Checkpoint.tscn" id="3_vxb1s"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yq8de"]
 texture = ExtResource("1_kyxg0")
@@ -63,3 +64,6 @@ tile_set = SubResource("TileSet_vxb1s")
 
 [node name="PlayerSpawn" type="Node2D" parent="." unique_id=1422003376]
 position = Vector2(408, 624)
+
+[node name="Checkpoint" parent="." unique_id=367929449 instance=ExtResource("3_vxb1s")]
+position = Vector2(1280, 464)

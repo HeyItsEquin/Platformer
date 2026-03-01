@@ -54,7 +54,7 @@ position = Vector2(480, 600)
 move_speed_transition_speed = 8.0
 
 [node name="Ground" type="StaticBody2D" parent="." unique_id=659786825 groups=["Ground"]]
-position = Vector2(560, 632)
+position = Vector2(529, 677)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=909830384]
 shape = SubResource("WorldBoundaryShape2D_wbfu4")

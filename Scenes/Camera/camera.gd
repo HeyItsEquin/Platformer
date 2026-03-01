@@ -11,3 +11,8 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	position.x = lerp(position.x, follow_target.position.x, follow_speed * delta)
 	position.y = lerp(position.y, follow_target.position.y - height_offset, follow_speed_y * delta)
+
+func load_background(bg: String) -> void:
+	match bg:
+		"Brain":
+			$Brain.visible = true

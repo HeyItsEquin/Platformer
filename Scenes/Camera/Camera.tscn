@@ -7,7 +7,7 @@
 zoom = Vector2(2, 2)
 script = ExtResource("1_0jrrr")
 
-[node name="BackGroundBrain" type="Sprite2D" parent="." unique_id=69602929]
+[node name="Brain" type="Sprite2D" parent="." unique_id=270523450]
 show_behind_parent = true
-z_index = -130
+z_index = -1
 texture = ExtResource("2_d7xdh")

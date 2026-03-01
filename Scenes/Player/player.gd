@@ -27,12 +27,19 @@ enum JumpState { NONE, TAKEOFF, RISING, APEX, FALLING, LANDING, DROPPING }
 var jump_state = JumpState.NONE
 var state_timer = 0
 
+enum BurrowState { NONE, ENTERING, BURROWED, EXITING }
+var burrow_state = BurrowState.NONE
+
 var is_jumping = false
-var is_burrowed = false
-var is_burrowing = false
 var use_burrowed_speed = false
 var animation_locked = false
-var burrow_cancelled = false
+
+# These two variables just to keep code working after major changes to burrow system :P
+# (no I'm not gonna fix the functions these break, are you crazy?)
+var is_burrowed: bool:
+	get: return burrow_state == BurrowState.BURROWED
+var is_burrowing: bool:
+	get: return burrow_state == BurrowState.ENTERING or burrow_state == BurrowState.EXITING
 
 var should_move = true
 var should_jump = true
@@ -47,6 +54,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	update_animation()
+	update_burrow()
 	update_collider()
 
 func _physics_process(delta: float) -> void:
@@ -61,14 +69,13 @@ func set_player_control(enabled: bool) -> void:
 	should_burrow = enabled
 
 func set_burrowed(burrowed: bool) -> void:
-	is_burrowed = burrowed
+	burrow_state = BurrowState.BURROWED if burrowed else BurrowState.NONE
 	use_burrowed_speed = burrowed
 
 func reset_state() -> void:
 	set_player_control(true)
 	set_burrowed(false)
 	animation_locked = false
-	is_burrowing = false
 	jump_state = JumpState.NONE
 	velocity = Vector2.ZERO
 
@@ -126,10 +133,38 @@ func update_animation() -> void:
 				$PlayerSprite.play("dropping")
 			elif velocity.x != 0 and not (is_burrowed or is_burrowing):
 				$PlayerSprite.play("moving")
-			elif is_burrowed and not is_burrowing:
+			elif burrow_state == BurrowState.BURROWED:
+				print("Play in burrow anim")
 				$PlayerSprite.play("in_burrow")
 			elif not is_burrowing and not is_burrowed:
 				$PlayerSprite.play("idle")
+
+func update_burrow() -> void:
+	match burrow_state:
+		BurrowState.ENTERING:
+			if not is_on_floor():
+				set_burrow_state(BurrowState.NONE)
+			elif not $PlayerSprite.is_playing():
+				set_burrow_state(BurrowState.BURROWED)
+		BurrowState.EXITING:
+			if not $PlayerSprite.is_playing():
+				set_burrow_state(BurrowState.NONE)
+
+func set_burrow_state(new: BurrowState) -> void:
+	match new:
+		BurrowState.NONE:
+			use_burrowed_speed = false
+			should_jump = true
+		BurrowState.ENTERING:
+			should_jump = false
+			use_burrowed_speed = true
+			$PlayerSprite.play("enter_burrow", 1.4)
+		BurrowState.BURROWED:
+			should_jump = true
+		BurrowState.EXITING:
+			use_burrowed_speed = false
+			$PlayerSprite.play("exit_burrow", 1.3)
+	burrow_state = new
 
 func process_input(delta: float) -> void:
 	if Input.is_action_pressed("move_right"):
@@ -168,50 +203,28 @@ func jump_cut() -> void:
 func enter_burrow() -> void:
 	if not can_burrow():
 		return
-
-	burrow_cancelled = false
-	is_burrowing = true
-	should_jump = false
-	use_burrowed_speed = true
-	$PlayerSprite.play("enter_burrow", 1.4)
-	await get_tree().create_timer($PlayerSprite.sprite_frames.get_animation_speed("enter_burrow") * ENTER_BURROW_FRAMES / 60.0).timeout
-
-	if burrow_cancelled or not is_on_floor():
-		is_burrowing = false
-		use_burrowed_speed = false
-		should_jump = true
-		return
-
-	should_jump = true
-	is_burrowing = false
-	is_burrowed = true
+	set_burrow_state(BurrowState.ENTERING)
 
 func can_burrow() -> bool:
-	return should_burrow and not is_burrowed and not is_burrowing and not is_jumping and is_on_floor()
+	return should_burrow and burrow_state == BurrowState.NONE and not is_jumping and is_on_floor()
 
 func exit_burrow(jumped: bool) -> void:
-	if is_burrowing and not is_burrowed:
-		burrow_cancelled = true
+	if burrow_state == BurrowState.ENTERING:
+		set_burrow_state(BurrowState.NONE)
 		return
-
+	
 	if not can_exit_burrow():
 		return
-
+	
 	if jumped:
-		set_burrowed(false)
+		set_burrow_state(BurrowState.NONE)
 		should_jump = true
 		jump(true)
 	else:
-		is_burrowing = true
-		should_jump = false
-		set_burrowed(false)
-		$PlayerSprite.play("exit_burrow", 1.3)
-		await $PlayerSprite.animation_finished
-		should_jump = true
-		is_burrowing = false
+		set_burrow_state(BurrowState.EXITING)
 
 func can_exit_burrow() -> bool:
-	return is_burrowed and not is_burrowing and should_burrow and not would_collide_with_size(collision_height)
+	return burrow_state == BurrowState.BURROWED and should_burrow and not would_collide_with_size(collision_height)
 
 # Don't ask me how this works, I don't want to think about it
 func would_collide_with_size(new_height: float) -> bool:

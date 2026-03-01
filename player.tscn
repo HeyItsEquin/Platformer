@@ -13,6 +13,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hqtel"]
 size = Vector2(32, 24)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_q13i1"]
+atlas = ExtResource("3_b26j0")
+region = Rect2(33, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pylmc"]
+atlas = ExtResource("3_b26j0")
+region = Rect2(0, 33, 32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_7ahtn"]
 atlas = ExtResource("3_n7ghd")
 region = Rect2(0, 0, 32, 32)
@@ -56,14 +64,6 @@ region = Rect2(0, 66, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_op7ga"]
 atlas = ExtResource("3_b26j0")
 region = Rect2(0, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_q13i1"]
-atlas = ExtResource("3_b26j0")
-region = Rect2(33, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pylmc"]
-atlas = ExtResource("3_b26j0")
-region = Rect2(0, 33, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pbfsw"]
 atlas = ExtResource("4_n7ghd")
@@ -119,6 +119,17 @@ region = Rect2(0, 33, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_onrkg"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q13i1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pylmc")
+}],
+"loop": true,
+"name": &"dropping",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 0.8,
 "texture": SubResource("AtlasTexture_7ahtn")
@@ -253,5 +264,6 @@ shape = SubResource("RectangleShape2D_hqtel")
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="." unique_id=1229430777]
 sprite_frames = SubResource("SpriteFrames_onrkg")
 animation = &"idle"
+frame_progress = 0.6620455
 
 [connection signal="animation_finished" from="PlayerSprite" to="." method="_on_player_sprite_animation_finished"]

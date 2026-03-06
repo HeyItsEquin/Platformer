@@ -407,6 +407,6 @@ shape = SubResource("RectangleShape2D_hqtel")
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="." unique_id=1229430777]
 sprite_frames = SubResource("SpriteFrames_onrkg")
-animation = &"exit_wall"
+animation = &"enter_burrow"
 
 [connection signal="animation_finished" from="PlayerSprite" to="." method="_on_player_sprite_animation_finished"]

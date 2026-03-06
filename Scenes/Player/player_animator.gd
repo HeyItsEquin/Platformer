@@ -48,7 +48,6 @@ func update_animation() -> void:
 		player_sprite.play(anim, speed)
 
 func update_burrow() -> void:
-	print("burrow_state: ", burrow_state, " anim: ", player_sprite.animation, " playing: ", player_sprite.is_playing())
 	match burrow_state:
 		BurrowState.ENTERING:
 			if not player_char.is_on_floor():

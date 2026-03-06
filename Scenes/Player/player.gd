@@ -255,12 +255,15 @@ func exit_burrow(jumped: bool) -> void:
 			return
 		if not can_exit_burrow():
 			return
+		wants_to_exit_burrow = false
+		is_jumping = true
+		animator.takeoff()
 		animator.set_burrow_state(animator.BurrowState.NONE)
 		should_jump = true
-		jump(true)
+		velocity.y = -jump_force_burrowed
+		jump_sound.play()
 	else:
 		wants_to_exit_burrow = true
-	animator.set_burrow_state(animator.BurrowState.EXITING)
 
 func can_exit_burrow() -> bool:
 	return animator.burrow_state == animator.BurrowState.BURROWED and should_burrow and not would_collide_with_size(collision_height)
@@ -352,7 +355,7 @@ func _on_burrow_state_changed(old: PlayerAnimator.BurrowState, new: PlayerAnimat
 			use_burrowed_speed = false
 			should_jump = true
 			enable_collider(true)
-			if is_on_floor():
+			if is_on_floor() and not is_jumping:
 				animator.jump_state = PlayerAnimator.JumpState.NONE
 		PlayerAnimator.BurrowState.ENTERING:
 			should_jump = false

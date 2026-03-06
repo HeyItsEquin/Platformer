@@ -64,7 +64,7 @@ func _ready() -> void:
 
 	background_music.play()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	update_burrow()
 	update_animation()
 	update_collider()

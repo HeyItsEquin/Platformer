@@ -4,10 +4,13 @@ class_name Player
 @export var move_speed = 400.0
 @export var burrow_move_speed = 200.0
 @export var burrow_wall_move_speed = 200.0
+@export var move_speed_slingshot = 50.0
 @export var jump_force_wall = 400.0
 @export var jump_force_wall_horizontal = 400.0
-@export var jump_force_standard = 500
-@export var jump_force_burrowed = 700
+@export var jump_force_standard = 500.0
+@export var jump_force_burrowed = 700.0
+@export var jump_force_slingshot = 700.0
+@export var horiz_slingshot_up_force = 200.0
 @export var jump_cut_multiplier = 0.5
 @export var fall_gravity_multiplier = 1.8
 @export var collision_height_jumping = 32.0
@@ -16,19 +19,24 @@ class_name Player
 @export var move_speed_transition_speed = 4.0
 
 @export var level: Node2D
-@export var tilemap: TileMapLayer
 @export var background_music: AudioStreamPlayer
 @export var jump_sound: AudioStreamPlayer
+
+@onready var tilemap: TileMapLayer = level.get_node("ForegroundTiles")
+
+enum MoveDir { RIGHT, LEFT, UP, NONE }
 
 const COLLISION_OFFSET_Y = 4
 const GRAVITY = 980
 const JUMP_APEX_THRESHOLD = 50
 
 var is_jumping = false
+var is_burrow_jumping = false
 var use_burrowed_speed = false
 var is_dying = false
 
 var wants_to_exit_burrow = false
+var requires_burrow_repress = false
 
 var should_move = true
 var should_jump = true
@@ -37,17 +45,16 @@ var should_burrow = true
 var wall_direction: int = 0
 
 var current_move_speed = move_speed
-var latest_checkpoint: Vector2
+@onready var latest_checkpoint: Vector2 = level.get_node("PlayerSpawn").position
 
-var Animator: PlayerAnimator
+@onready var Animator: PlayerAnimator = PlayerAnimator.new($PlayerSprite, self)
 
 func _ready() -> void:
+	# These 3 have to exist when Player is added to scene tree
+	# handled by Game.load_level();
 	assert(level)
 	assert(background_music)
 	assert(jump_sound)
-	latest_checkpoint = level.get_node("PlayerSpawn").position
-	tilemap = level.get_node("ForegroundTiles")
-	Animator = PlayerAnimator.new($PlayerSprite, self)
 	Animator.burrow_state_changed.connect(_on_burrow_state_changed)
 
 	# background_music.play()
@@ -84,10 +91,15 @@ func reset_state() -> void:
 	Animator.animation_locked = false
 	Animator.jump_state = Animator.JumpState.NONE
 	velocity = Vector2.ZERO
+	requires_burrow_repress = false
 
 func apply_gravity(delta: float) -> void:
 	if is_on_floor():
 		is_jumping = false
+		if is_burrow_jumping:
+			is_burrow_jumping = false
+			if Input.is_action_pressed("burrow"):
+				requires_burrow_repress = true
 		return
 
 	if Animator.on_wall():
@@ -100,14 +112,16 @@ func apply_gravity(delta: float) -> void:
 
 	velocity.y += gravity_this_frame * delta
 
-func is_burrowable_tile() -> bool:
-	var check_pos = global_position + Vector2(wall_direction * 32, 0)
+func is_burrowable_tile(start_pos: Vector2 = global_position, check_offset_y: int = 0) -> bool:
+	var check_pos = start_pos + Vector2(wall_direction * 32, check_offset_y)
 	var tile_pos = tilemap.local_to_map(check_pos - tilemap.global_position)
 	var tile_data = tilemap.get_cell_tile_data(tile_pos)
 	return tile_data and tile_data.get_custom_data("burrowable")
 
 func check_wall_burrow() -> void:
 	if not Input.is_action_pressed("burrow"):
+		return
+	if requires_burrow_repress:
 		return
 	if Animator.burrow_state != PlayerAnimator.BurrowState.NONE and Animator.burrow_state != PlayerAnimator.BurrowState.BURROWED:
 		return
@@ -147,17 +161,21 @@ func process_input(delta: float) -> void:
 	else:
 		move(MoveDir.NONE, delta)
 
-	if Input.is_action_just_pressed("move_up"):
+	if Input.is_action_just_pressed("jump"):
 		if Animator.is_burrowed():
 			exit_burrow(true)
 		elif Animator.burrow_state != PlayerAnimator.BurrowState.EXITING:
 			jump()
 
-	if Input.is_action_just_released("move_up"):
+	if Input.is_action_just_released("jump"):
 		jump_cut()
 
+	if Input.is_action_just_pressed("burrow"):
+		requires_burrow_repress = false
+
 	if Input.is_action_pressed("burrow"):
-		enter_burrow()
+		if not requires_burrow_repress:	
+			enter_burrow()
 		wants_to_exit_burrow = false
 	elif Input.is_action_just_released("burrow"):
 		wants_to_exit_burrow = true
@@ -172,17 +190,7 @@ func process_wall_movement(delta: float) -> void:
 		return
 
 	if Input.is_action_just_pressed("wall_jump"):
-		velocity = Vector2.ZERO
-		$CollisionShape.disabled = false
-		Animator.burrow_state = PlayerAnimator.BurrowState.NONE
-		should_jump = true
-		use_burrowed_speed = false
-		velocity.x = -wall_direction * jump_force_wall_horizontal
-		velocity.y = -jump_force_wall
-		is_jumping = true
-		Animator.jump_state = PlayerAnimator.JumpState.TAKEOFF
-		Animator.state_timer = PlayerAnimator.TAKEOFF_FRAMES
-		jump_sound.play()
+		burrow_jump(true)
 		return
 
 	if Input.is_action_pressed("move_up"):
@@ -194,25 +202,47 @@ func process_wall_movement(delta: float) -> void:
 
 	if velocity.y > 0:
 		var next_pos = global_position + Vector2(0, velocity.y * get_physics_process_delta_time())
-		var check_pos = next_pos + Vector2(wall_direction * 32, 8)
-		var tile_pos = tilemap.local_to_map(check_pos - tilemap.global_position)
-		var tile_data = tilemap.get_cell_tile_data(tile_pos)
-		if not tile_data or not tile_data.get_custom_data("burrowable"):
+		if not is_burrowable_tile(next_pos, collision_height):
 			velocity.y = 0
 
 	if velocity.y < 0:
-		var check_pos = global_position + Vector2(wall_direction * 32, -collision_height / 2.0)
-		var tile_pos = tilemap.local_to_map(check_pos - tilemap.global_position)
-		var tile_data = tilemap.get_cell_tile_data(tile_pos)
-		if not tile_data or not tile_data.get_custom_data("burrowable"):
+		if not is_burrowable_tile(global_position, -collision_height):
 			velocity.y = 0
 
 	velocity.x = 0
 	position += velocity * delta
 
-func jump(burrowed: bool = false, from_wall: bool = false) -> void:
+func burrow_jump(wall: bool = false) -> void:
+	if wall:
+		velocity = Vector2.ZERO
+		$CollisionShape.disabled = false
+		if Input.is_action_pressed("burrow"):
+			requires_burrow_repress = true
+	Animator.set_burrow_state(PlayerAnimator.BurrowState.NONE)
+	should_jump = true
+	use_burrowed_speed = false
+	velocity = get_burrow_jump_velocity(wall)
+	is_burrow_jumping = true
+	is_jumping = true
+	Animator.takeoff()
+	jump_sound.play()
+
+func get_burrow_jump_velocity(wall: bool) -> Vector2:
+	var v = Vector2.ZERO
+	if wall: v.x = -wall_direction * jump_force_wall_horizontal
+	v.y = -jump_force_wall if wall else -jump_force_burrowed
+	if Input.is_action_pressed("move_left"):
+		v.x = -jump_force_slingshot
+		v.y = -horiz_slingshot_up_force
+	if Input.is_action_pressed("move_right"):
+		v.x = jump_force_slingshot
+		v.y = -horiz_slingshot_up_force
+	return v
+
+func jump() -> void:
 	if is_on_floor() and should_jump:
-		velocity.y = -(jump_force_burrowed if burrowed else jump_force_standard)
+		velocity.y = -jump_force_standard
+		is_burrow_jumping = false 
 		is_jumping = true
 		Animator.takeoff()
 		jump_sound.play()
@@ -256,13 +286,7 @@ func exit_burrow(jumped: bool) -> void:
 			return
 		if not can_exit_burrow():
 			return
-		wants_to_exit_burrow = false
-		is_jumping = true
-		Animator.takeoff()
-		Animator.set_burrow_state(PlayerAnimator.BurrowState.NONE)
-		should_jump = true
-		velocity.y = -jump_force_burrowed
-		jump_sound.play()
+		burrow_jump()
 	else:
 		wants_to_exit_burrow = true
 
@@ -288,7 +312,6 @@ func would_collide_with_size(new_height: float) -> bool:
 
 	return space.intersect_shape(query).size() > 0
 
-enum MoveDir { RIGHT, LEFT, NONE }
 func move(dir: MoveDir, delta: float) -> void:
 	if dir == MoveDir.RIGHT:
 		velocity.x = get_move_speed(delta)
@@ -303,9 +326,18 @@ func move(dir: MoveDir, delta: float) -> void:
 		velocity.x = 0
 
 func get_move_speed(delta: float) -> float:
-	var target = burrow_move_speed if use_burrowed_speed else move_speed
+	var target = get_move_speed_target() 
 	current_move_speed = lerpf(current_move_speed, target, move_speed_transition_speed * delta)
 	return current_move_speed
+
+func get_move_speed_target() -> float:
+	var speed = move_speed
+	if use_burrowed_speed:
+		speed = burrow_move_speed		
+	return speed
+
+func get_burrow_jump_dir() -> MoveDir:
+	return MoveDir.NONE
 
 # For the love of god don't fucking change this PLEASE
 func update_collider() -> void:
@@ -347,9 +379,6 @@ func respawn(location: Vector2 = position) -> void:
 func enable_collider(should: bool) -> void:
 	$CollisionShape.disabled = not should
 
-func _on_player_sprite_animation_finished() -> void:
-	pass
-
 func _on_burrow_state_changed(old: PlayerAnimator.BurrowState, new: PlayerAnimator.BurrowState) -> void:
 	match new:
 		PlayerAnimator.BurrowState.NONE:
@@ -376,3 +405,5 @@ func _on_burrow_state_changed(old: PlayerAnimator.BurrowState, new: PlayerAnimat
 		PlayerAnimator.BurrowState.EXITING_WALL:
 			should_jump = false
 			enable_collider(true)
+			if Input.is_action_pressed("burrow"):
+				requires_burrow_repress = true

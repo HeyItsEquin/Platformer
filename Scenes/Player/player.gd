@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Player
 
 @export var move_speed = 400.0
 @export var burrow_move_speed = 200.0
@@ -39,6 +40,7 @@ var current_move_speed = move_speed
 var latest_checkpoint: Vector2
 
 var animator: PlayerAnimator
+var Movement: MovementManager
 
 func _ready() -> void:
 	assert(level)
@@ -48,6 +50,7 @@ func _ready() -> void:
 	tilemap = level.get_node("ForegroundTiles")
 	animator = PlayerAnimator.new($PlayerSprite, self)
 	animator.burrow_state_changed.connect(_on_burrow_state_changed)
+	Movement = MovementManager.new(self)
 
 	# background_music.play()
 

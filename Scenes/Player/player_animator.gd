@@ -1,7 +1,7 @@
 class_name PlayerAnimator
 
 var player_sprite: AnimatedSprite2D
-var player_char: CharacterBody2D
+var player_char: Player
 
 signal burrow_state_changed(old_state: BurrowState, new_state: BurrowState)
 
@@ -34,7 +34,7 @@ const ANIMATION_SPEEDS = {
 	"exit_wall":    1.5,
 }
 
-func _init(psprite: AnimatedSprite2D, pchar: CharacterBody2D) -> void:
+func _init(psprite: AnimatedSprite2D, pchar: Player) -> void:
 	player_sprite = psprite
 	player_char = pchar
 

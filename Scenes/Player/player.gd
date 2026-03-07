@@ -39,7 +39,7 @@ var wall_direction: int = 0
 var current_move_speed = move_speed
 var latest_checkpoint: Vector2
 
-var animator: PlayerAnimator
+var Animator: PlayerAnimator
 var Movement: MovementManager
 
 func _ready() -> void:
@@ -48,28 +48,28 @@ func _ready() -> void:
 	assert(jump_sound)
 	latest_checkpoint = level.get_node("PlayerSpawn").position
 	tilemap = level.get_node("ForegroundTiles")
-	animator = PlayerAnimator.new($PlayerSprite, self)
-	animator.burrow_state_changed.connect(_on_burrow_state_changed)
+	Animator = PlayerAnimator.new($PlayerSprite, self)
+	Animator.burrow_state_changed.connect(_on_burrow_state_changed)
 	Movement = MovementManager.new(self)
 
 	# background_music.play()
 
 func _process(_delta: float) -> void:
-	animator.update_animation()
-	animator.update_burrow()
+	Animator.update_animation()
+	Animator.update_burrow()
 	update_collider()
 
 func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
 	process_input(delta)
 	process_wall_movement(delta)
-	if not animator.on_wall() and not animator.is_wall_transitioning():
+	if not Animator.on_wall() and not Animator.is_wall_transitioning():
 		move_and_slide()
 	check_collisions()
 	check_wall_burrow()
-	if wants_to_exit_burrow and animator.is_burrowed() and can_exit_burrow():
+	if wants_to_exit_burrow and Animator.is_burrowed() and can_exit_burrow():
 		wants_to_exit_burrow = false
-		animator.set_burrow_state(animator.BurrowState.EXITING)
+		Animator.set_burrow_state(PlayerAnimator.BurrowState.EXITING)
 
 func set_player_control(enabled: bool) -> void:
 	should_move = enabled
@@ -77,14 +77,14 @@ func set_player_control(enabled: bool) -> void:
 	should_burrow = enabled
 
 func set_burrowed(burrowed: bool) -> void:
-	animator.burrow_state = animator.BurrowState.BURROWED if burrowed else animator.BurrowState.NONE
+	Animator.burrow_state = PlayerAnimator.BurrowState.BURROWED if burrowed else PlayerAnimator.BurrowState.NONE
 	use_burrowed_speed = burrowed
 
 func reset_state() -> void:
 	set_player_control(true)
 	set_burrowed(false)
-	animator.animation_locked = false
-	animator.jump_state = animator.JumpState.NONE
+	Animator.animation_locked = false
+	Animator.jump_state = Animator.JumpState.NONE
 	velocity = Vector2.ZERO
 
 func apply_gravity(delta: float) -> void:
@@ -92,7 +92,7 @@ func apply_gravity(delta: float) -> void:
 		is_jumping = false
 		return
 
-	if animator.on_wall():
+	if Animator.on_wall():
 		velocity.y = 0
 		return
 
@@ -111,7 +111,7 @@ func is_burrowable_tile() -> bool:
 func check_wall_burrow() -> void:
 	if not Input.is_action_pressed("burrow"):
 		return
-	if animator.burrow_state != animator.BurrowState.NONE and animator.burrow_state != animator.BurrowState.BURROWED:
+	if Animator.burrow_state != PlayerAnimator.BurrowState.NONE and Animator.burrow_state != PlayerAnimator.BurrowState.BURROWED:
 		return
 	if not should_burrow:
 		return
@@ -135,11 +135,11 @@ func check_wall_burrow() -> void:
 
 			if tile_data and tile_data.get_custom_data("burrowable"):
 				wall_direction = dir
-				animator.set_burrow_state(animator.BurrowState.ENTERING_WALL)
+				Animator.set_burrow_state(PlayerAnimator.BurrowState.ENTERING_WALL)
 				return
 
 func process_input(delta: float) -> void:
-	if animator.on_wall():
+	if Animator.on_wall():
 		return
 
 	if Input.is_action_pressed("move_right"):
@@ -150,9 +150,9 @@ func process_input(delta: float) -> void:
 		move(MoveDir.NONE, delta)
 
 	if Input.is_action_just_pressed("move_up"):
-		if animator.is_burrowed():
+		if Animator.is_burrowed():
 			exit_burrow(true)
-		elif animator.burrow_state != animator.BurrowState.EXITING:
+		elif Animator.burrow_state != PlayerAnimator.BurrowState.EXITING:
 			jump()
 
 	if Input.is_action_just_released("move_up"):
@@ -165,25 +165,25 @@ func process_input(delta: float) -> void:
 		wants_to_exit_burrow = true
 
 func process_wall_movement(delta: float) -> void:
-	if animator.burrow_state != animator.BurrowState.WALL:
+	if Animator.burrow_state != PlayerAnimator.BurrowState.WALL:
 		return
 
 	if Input.is_action_just_released("burrow"):
 		velocity = Vector2.ZERO
-		animator.set_burrow_state(animator.BurrowState.EXITING_WALL)
+		Animator.set_burrow_state(PlayerAnimator.BurrowState.EXITING_WALL)
 		return
 
 	if Input.is_action_just_pressed("wall_jump"):
 		velocity = Vector2.ZERO
 		$CollisionShape.disabled = false
-		animator.burrow_state = animator.BurrowState.NONE
+		Animator.burrow_state = PlayerAnimator.BurrowState.NONE
 		should_jump = true
 		use_burrowed_speed = false
 		velocity.x = -wall_direction * jump_force_wall_horizontal
 		velocity.y = -jump_force_wall
 		is_jumping = true
-		animator.jump_state = animator.JumpState.TAKEOFF
-		animator.state_timer = animator.TAKEOFF_FRAMES
+		Animator.jump_state = PlayerAnimator.JumpState.TAKEOFF
+		Animator.state_timer = PlayerAnimator.TAKEOFF_FRAMES
 		jump_sound.play()
 		return
 
@@ -216,7 +216,7 @@ func jump(burrowed: bool = false, from_wall: bool = false) -> void:
 	if is_on_floor() and should_jump:
 		velocity.y = -(jump_force_burrowed if burrowed else jump_force_standard)
 		is_jumping = true
-		animator.takeoff()
+		Animator.takeoff()
 		jump_sound.play()
 
 func jump_cut() -> void:
@@ -226,10 +226,10 @@ func jump_cut() -> void:
 func enter_burrow() -> void:
 	if not can_burrow():
 		return
-	animator.set_burrow_state(animator.BurrowState.ENTERING)
+	Animator.set_burrow_state(PlayerAnimator.BurrowState.ENTERING)
 
 func can_burrow() -> bool:
-	if not should_burrow or animator.burrow_state != animator.BurrowState.NONE or is_jumping or not is_on_floor():
+	if not should_burrow or Animator.burrow_state != PlayerAnimator.BurrowState.NONE or is_jumping or not is_on_floor():
 		return false
 	
 	for i in get_slide_collision_count():
@@ -254,14 +254,14 @@ func can_burrow() -> bool:
 
 func exit_burrow(jumped: bool) -> void:
 	if jumped:
-		if animator.burrow_state != animator.BurrowState.BURROWED or not should_burrow:
+		if Animator.burrow_state != PlayerAnimator.BurrowState.BURROWED or not should_burrow:
 			return
 		if not can_exit_burrow():
 			return
 		wants_to_exit_burrow = false
 		is_jumping = true
-		animator.takeoff()
-		animator.set_burrow_state(animator.BurrowState.NONE)
+		Animator.takeoff()
+		Animator.set_burrow_state(PlayerAnimator.BurrowState.NONE)
 		should_jump = true
 		velocity.y = -jump_force_burrowed
 		jump_sound.play()
@@ -269,7 +269,7 @@ func exit_burrow(jumped: bool) -> void:
 		wants_to_exit_burrow = true
 
 func can_exit_burrow() -> bool:
-	return animator.burrow_state == animator.BurrowState.BURROWED and should_burrow and not would_collide_with_size(collision_height)
+	return Animator.burrow_state == PlayerAnimator.BurrowState.BURROWED and should_burrow and not would_collide_with_size(collision_height)
 
 # Don't ask me how this works, I don't want to think about it
 func would_collide_with_size(new_height: float) -> bool:
@@ -317,9 +317,9 @@ func update_collider() -> void:
 	$CollisionShape.position.y = COLLISION_OFFSET_Y + offset
 
 func get_target_collider_height() -> float:
-	if animator.is_burrowed() and not is_jumping:
+	if Animator.is_burrowed() and not is_jumping:
 		return collision_height_burrowed
-	if is_jumping and not animator.is_burrowed():
+	if is_jumping and not Animator.is_burrowed():
 		return collision_height_jumping
 	return collision_height
 
@@ -334,7 +334,7 @@ func check_collisions() -> void:
 func die() -> void:
 	is_dying = true
 	set_player_control(false)
-	animator.animation_locked = true
+	Animator.animation_locked = true
 	$PlayerSprite.stop()
 	$PlayerSprite.play("death", 2.4)
 	await $PlayerSprite.animation_finished
@@ -359,7 +359,7 @@ func _on_burrow_state_changed(old: PlayerAnimator.BurrowState, new: PlayerAnimat
 			should_jump = true
 			enable_collider(true)
 			if is_on_floor() and not is_jumping:
-				animator.jump_state = PlayerAnimator.JumpState.NONE
+				Animator.jump_state = PlayerAnimator.JumpState.NONE
 		PlayerAnimator.BurrowState.ENTERING:
 			should_jump = false
 			use_burrowed_speed = true
@@ -371,7 +371,7 @@ func _on_burrow_state_changed(old: PlayerAnimator.BurrowState, new: PlayerAnimat
 			should_jump = false
 			velocity = Vector2.ZERO
 			enable_collider(false)
-			animator.jump_state = PlayerAnimator.JumpState.NONE
+			Animator.jump_state = PlayerAnimator.JumpState.NONE
 		PlayerAnimator.BurrowState.WALL:
 			should_jump = true
 			enable_collider(false)

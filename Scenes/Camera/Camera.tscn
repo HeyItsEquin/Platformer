@@ -11,7 +11,7 @@ gradient = SubResource("Gradient_d7xdh")
 fill_to = Vector2(0, 1)
 
 [node name="Camera" type="Camera2D" unique_id=1163935152 groups=["Camera"]]
-zoom = Vector2(1.5, 1.5)
+zoom = Vector2(1.75, 1.75)
 script = ExtResource("1_0jrrr")
 
 [node name="Brain" type="Sprite2D" parent="." unique_id=1670166393]

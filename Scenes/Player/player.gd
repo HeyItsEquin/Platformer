@@ -21,6 +21,7 @@ class_name Player
 @export var level: Node2D
 @export var background_music: AudioStreamPlayer
 @export var jump_sound: AudioStreamPlayer
+@export var camera: Camera
 
 @onready var tilemap: TileMapLayer = level.get_node("ForegroundTiles")
 
@@ -231,12 +232,6 @@ func get_burrow_jump_velocity(wall: bool) -> Vector2:
 	var v = Vector2.ZERO
 	if wall: v.x = -wall_direction * jump_force_wall_horizontal
 	v.y = -jump_force_wall if wall else -jump_force_burrowed
-	if Input.is_action_pressed("move_left"):
-		v.x = -jump_force_slingshot
-		v.y = -horiz_slingshot_up_force
-	if Input.is_action_pressed("move_right"):
-		v.x = jump_force_slingshot
-		v.y = -horiz_slingshot_up_force
 	return v
 
 func jump() -> void:

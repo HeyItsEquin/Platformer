@@ -40,7 +40,6 @@ var current_move_speed = move_speed
 var latest_checkpoint: Vector2
 
 var Animator: PlayerAnimator
-var Movement: MovementManager
 
 func _ready() -> void:
 	assert(level)
@@ -50,7 +49,6 @@ func _ready() -> void:
 	tilemap = level.get_node("ForegroundTiles")
 	Animator = PlayerAnimator.new($PlayerSprite, self)
 	Animator.burrow_state_changed.connect(_on_burrow_state_changed)
-	Movement = MovementManager.new(self)
 
 	# background_music.play()
 

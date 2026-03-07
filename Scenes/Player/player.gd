@@ -17,6 +17,7 @@ class_name Player
 @export var collision_height = 24.0
 @export var collision_height_burrowed = 8.0
 @export var move_speed_transition_speed = 4.0
+@export var burrow_buffer_time = 0.15
 
 @export var level: Node2D
 @export var background_music: AudioStreamPlayer
@@ -45,6 +46,8 @@ var should_burrow = true
 
 var wall_direction: int = 0
 
+var burrow_buffer_timer = 0.0
+
 var current_move_speed = move_speed
 @onready var latest_checkpoint: Vector2 = level.get_node("PlayerSpawn").position
 
@@ -71,11 +74,15 @@ func _physics_process(delta: float) -> void:
 	process_wall_movement(delta)
 	if not Animator.on_wall() and not Animator.is_wall_transitioning():
 		move_and_slide()
+	if burrow_buffer_timer > 0.0 and can_burrow():
+		burrow_buffer_timer = 0.0
+		Animator.set_burrow_state(PlayerAnimator.BurrowState.ENTERING)
 	check_collisions()
 	check_wall_burrow()
 	if wants_to_exit_burrow and Animator.is_burrowed() and can_exit_burrow():
 		wants_to_exit_burrow = false
 		Animator.set_burrow_state(PlayerAnimator.BurrowState.EXITING)
+	burrow_buffer_timer = max(0.0, burrow_buffer_timer - delta)
 
 func set_player_control(enabled: bool) -> void:
 	should_move = enabled
@@ -248,7 +255,9 @@ func jump_cut() -> void:
 
 func enter_burrow() -> void:
 	if not can_burrow():
+		burrow_buffer_timer = burrow_buffer_time
 		return
+	burrow_buffer_timer = 0.0
 	Animator.set_burrow_state(PlayerAnimator.BurrowState.ENTERING)
 
 func can_burrow() -> bool:
